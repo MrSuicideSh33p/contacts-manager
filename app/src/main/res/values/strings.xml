@@ -2,4 +2,6 @@
     <string name="app_name">JapanTrip</string>
     <string name="navigation_drawer_open">Open Navigation</string>
     <string name="navigation_drawer_close">Close Navigation</string>
+    <string name="welcome_text">Welcome to <i>Wolbachia</i> Conference 2025</string>
+    <string name="conference_info"><i>Wolbachia</i> Conference 2025</string>
 </resources>

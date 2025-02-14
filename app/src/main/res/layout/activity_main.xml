@@ -41,9 +41,10 @@
                 android:id="@+id/welcomeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Welcome to Wolbachia Conference 2025"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:text="@string/welcome_text"
+                android:ellipsize="end"/>
 
             <TextView
                 android:id="@+id/quickActionsTitle"

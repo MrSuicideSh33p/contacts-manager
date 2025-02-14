@@ -32,7 +32,8 @@
         android:id="@+id/et_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="John Doe"
+        android:hint="Jane Doe"
+        android:textColor="@color/very_light_gray"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"/>
@@ -51,6 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="John"
+        android:textColor="@color/very_light_gray"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"/>
@@ -70,6 +72,7 @@
         android:layout_height="wrap_content"
         android:hint="+48 6942069420"
         android:inputType="phone"
+        android:textColor="@color/very_light_gray"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"/>
@@ -87,8 +90,9 @@
         android:id="@+id/et_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="john.doe@gmail.com"
+        android:hint="jane.doe@gmail.com"
         android:inputType="textEmailAddress"
+        android:textColor="@color/very_light_gray"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"/>
@@ -107,6 +111,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Molecular Biology"
+        android:textColor="@color/very_light_gray"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"/>
@@ -125,6 +130,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Jagiellonian University"
+        android:textColor="@color/very_light_gray"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"/>
@@ -142,7 +148,8 @@
         android:id="@+id/et_notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wolbachia Conference 2025"
+        android:hint="@string/conference_info"
+        android:textColor="@color/very_light_gray"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"/>
