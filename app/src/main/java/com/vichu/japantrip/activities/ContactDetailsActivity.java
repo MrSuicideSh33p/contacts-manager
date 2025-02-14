@@ -64,8 +64,10 @@ public class ContactDetailsActivity extends AppCompatActivity {
 
     private void setEditingEnabled(boolean enabled) {
         nameEditText.setEnabled(enabled);
+        nickNameEditText.setEnabled(enabled);
         phoneEditText.setEnabled(enabled);
         emailEditText.setEnabled(enabled);
+        notesText.setEnabled(enabled);
         isEditing = enabled;
         if (saveMenuItem != null) {
             saveMenuItem.setVisible(enabled);
