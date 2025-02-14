@@ -1,69 +1,84 @@
 package com.vichu.japantrip.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
-
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
+import java.util.ArrayList;
+import java.util.List;
 import com.vichu.japantrip.R;
 import com.vichu.japantrip.utils.AwsS3Helper;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
-
 public class ContactListActivity extends AppCompatActivity {
 
-    private ListView contactListView;
+    private ProgressBar progressBar;
+    private ArrayAdapter<String> adapter;
+    private final List<String> contactNames = new ArrayList<>();
+    private final List<String> contactFiles = new ArrayList<>();
     private AwsS3Helper awsS3Helper;
-    private List<String> contactList;
+    private static final int REQUEST_CODE_CONTACT_DETAILS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
 
-        contactListView = findViewById(R.id.lv_contacts);
+        ListView contactListView = findViewById(R.id.contactListView);
+        progressBar = findViewById(R.id.progressBar);
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, contactNames);
+        contactListView.setAdapter(adapter);
+
         awsS3Helper = new AwsS3Helper(this);
-        loadContactsFromS3();
+
+        fetchContacts();
+
+        contactListView.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent = new Intent(ContactListActivity.this, ContactDetailsActivity.class);
+            intent.putExtra("contactName", contactNames.get(position));
+            intent.putExtra("contactFile", contactFiles.get(position));
+            startActivityForResult(intent, REQUEST_CODE_CONTACT_DETAILS);
+        });
     }
 
-    private void loadContactsFromS3() {
-        new Thread(() -> {
-            try {
-                runOnUiThread(() -> Toast.makeText(this, "Fetching contacts...", Toast.LENGTH_SHORT).show());
+    private void fetchContacts() {
+        progressBar.setVisibility(View.VISIBLE);
 
-                File file = awsS3Helper.downloadFile("contacts/latest_contacts.txt", this);
+        awsS3Helper.fetchContactList(new AwsS3Helper.S3ContactFetchListener() {
+            @Override
+            public void onSuccess(List<String> names, List<String> files) {
+                contactNames.clear();
+                contactFiles.clear();
+                contactNames.addAll(names);
+                contactFiles.addAll(files);
 
-                if (file != null && file.exists()) {
-                    List<String> tempContactList = new ArrayList<>();
-                    BufferedReader reader = new BufferedReader(new FileReader(file));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        tempContactList.add(line);
-                    }
-                    reader.close();
-
-                    // Update UI on the main thread
-                    runOnUiThread(() -> {
-                        contactList.clear();
-                        contactList.addAll(tempContactList);
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, contactList);
-                        contactListView.setAdapter(adapter);
-                        Toast.makeText(this, "Contacts loaded successfully!", Toast.LENGTH_SHORT).show();
-                    });
-                } else {
-                    runOnUiThread(() -> Toast.makeText(this, "No contacts found!", Toast.LENGTH_SHORT).show());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                runOnUiThread(() -> Toast.makeText(this, "Error reading file: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                runOnUiThread(() -> {
+                    adapter.notifyDataSetChanged();
+                    progressBar.setVisibility(View.GONE);
+                });
             }
-        }).start();
+
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    Toast.makeText(ContactListActivity.this, "Error fetching contacts: " + error, Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                });
+            }
+        });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_CONTACT_DETAILS && resultCode == RESULT_OK) {
+            fetchContacts();  // Refresh contacts after an update or delete
+        }
+    }
 }

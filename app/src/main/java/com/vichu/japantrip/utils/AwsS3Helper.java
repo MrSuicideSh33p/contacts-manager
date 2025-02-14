@@ -8,12 +8,21 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.vichu.japantrip.R;
+import com.vichu.japantrip.models.ContactData;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -32,7 +41,7 @@ public class AwsS3Helper {
 
     private void initializeS3Client(Context context) {
         try {
-            // Load credentials from assets/aws_credentials.properties
+            // Load credentials from raw/aws_credentials.properties
             Properties properties = new Properties();
             InputStream credentialsStream = context.getResources().openRawResource(R.raw.aws_credentials);
             properties.load(credentialsStream);
@@ -66,19 +75,69 @@ public class AwsS3Helper {
         });
     }
 
-    public File downloadFile(String s3FileName, Context context) {
-        if (s3Client == null) {
-            Log.e(TAG, "Amazon S3 client is NULL! Cannot download file.");
-            return null;
-        }
-        try {
-            File localFile = new File(context.getCacheDir(), "downloaded_contacts.txt");
-            s3Client.getObject(new GetObjectRequest(BUCKET_NAME, s3FileName), localFile);
-            Log.d(TAG, "File downloaded successfully from S3: " + s3FileName);
-            return localFile;
-        } catch (Exception e) {
-            Log.e(TAG, "File download failed: " + e.getMessage(), e);
-            return null;
-        }
+    public void fetchContactList(S3ContactFetchListener listener) {
+        new Thread(() -> {
+            try {
+                ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(BUCKET_NAME).withPrefix("contacts/");
+                ObjectListing objectListing = s3Client.listObjects(listObjectsRequest);
+                List<String> names = new ArrayList<>();
+                List<String> files = new ArrayList<>();
+
+                for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+                    String fileName = objectSummary.getKey();
+                    files.add(fileName);
+                    names.add(fileName.substring(fileName.lastIndexOf('/') + 1));
+                }
+                listener.onSuccess(names, files);
+            } catch (Exception e) {
+                listener.onError(e.getMessage());
+            }
+        }).start();
+    }
+
+    public void fetchContactDetails(String fileName, ContactDataListener listener) {
+        new Thread(() -> {
+            try {
+                S3Object s3Object = s3Client.getObject(BUCKET_NAME, fileName);
+                InputStream inputStream = s3Object.getObjectContent();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                StringBuilder content = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line).append("\n");
+                }
+                reader.close();
+                ContactData contactData = new ContactData(content.toString());
+                listener.onResult(contactData, null);
+            } catch (Exception e) {
+                listener.onResult(null, e.getMessage());
+            }
+        }).start();
+    }
+
+    public void deleteContact(String fileName, DeleteListener listener) {
+        new Thread(() -> {
+            try {
+                s3Client.deleteObject(new DeleteObjectRequest(BUCKET_NAME, fileName));
+                listener.onSuccess(true);
+            } catch (Exception e) {
+                listener.onSuccess(false);
+            }
+        }).start();
+    }
+
+    public interface S3ContactFetchListener {
+        void onSuccess(List<String> names, List<String> files);
+        void onError(String error);
+    }
+
+    @FunctionalInterface
+    public interface ContactDataListener {
+        void onResult(ContactData contactData, String errorMessage);
+    }
+
+    public interface DeleteListener {
+        void onSuccess(boolean success);
     }
 }
+

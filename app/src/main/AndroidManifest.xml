@@ -22,6 +22,7 @@ package="com.vichu.japantrip">
         <activity android:name="com.vichu.japantrip.activities.MainActivity"/>
         <activity android:name="com.vichu.japantrip.activities.ContactEntryActivity"/>
         <activity android:name="com.vichu.japantrip.activities.ContactListActivity"/>
+        <activity android:name="com.vichu.japantrip.activities.ContactDetailsActivity"/>
     </application>
 
 </manifest>
