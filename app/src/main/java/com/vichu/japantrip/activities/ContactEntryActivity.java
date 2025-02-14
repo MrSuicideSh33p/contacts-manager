@@ -1,5 +1,6 @@
 package com.vichu.japantrip.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.vichu.japantrip.R;
+import com.vichu.japantrip.models.ContactData;
 import com.vichu.japantrip.utils.AwsS3Helper;
 
 import java.io.File;
@@ -55,16 +57,23 @@ public class ContactEntryActivity extends AppCompatActivity {
             return;
         }
 
-        try {
-            File contactFile = new File(getCacheDir(), "contact.txt");
-            FileWriter writer = new FileWriter(contactFile);
-            writer.write(name + "," + nickName + "," + phone + "," + email + "," + notes);
-            writer.close();
+        ContactData contactData = new ContactData(name, nickName, phone, email, notes);
+        String contactContent = contactData.toFileFormat();
 
-            awsS3Helper.uploadFile(contactFile);
-            Toast.makeText(this, "Contact uploaded to S3!", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Toast.makeText(this, "Failed to save contact!", Toast.LENGTH_SHORT).show();
-        }
+        awsS3Helper.uploadContact(null, contactContent, (success, fileName) -> {
+            runOnUiThread(() -> {
+                if (success) {
+                    Toast.makeText(this, "Contact uploaded to S3!", Toast.LENGTH_SHORT).show();
+                    // Redirect to MainActivity after successful upload
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "Failed to save contact!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
+
 }

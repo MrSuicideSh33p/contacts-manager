@@ -7,16 +7,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.vichu.japantrip.R;
 import com.vichu.japantrip.models.ContactData;
 import com.vichu.japantrip.utils.AwsS3Helper;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 public class ContactDetailsActivity extends AppCompatActivity {
 
@@ -127,28 +124,29 @@ public class ContactDetailsActivity extends AppCompatActivity {
         String newNotes = notesText.getText().toString().trim();
 
         if (newName.isEmpty()) {
-            Toast.makeText(ContactDetailsActivity.this, "Name field is required!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Name field is required!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        ContactData updatedContact = new ContactData(newName, "", newPhone, newEmail, "");
+        ContactData updatedContact = new ContactData(newName, newNickName, newPhone, newEmail, newNotes);
         String updatedFileContent = updatedContact.toFileFormat();
 
-        awsS3Helper.deleteContact(contactFile, success -> {
-            if (success) {
-                awsS3Helper.uploadContact(contactFile, updatedFileContent, uploadSuccess -> {
-                    if (uploadSuccess) {
-                        runOnUiThread(() -> {
-                            Toast.makeText(this, "Contact updated", Toast.LENGTH_SHORT).show();
-                            setEditingEnabled(false);
-                        });
-                    } else {
-                        runOnUiThread(() -> Toast.makeText(this, "Update failed", Toast.LENGTH_SHORT).show());
-                    }
-                });
-            } else {
-                runOnUiThread(() -> Toast.makeText(this, "Failed to delete old contact", Toast.LENGTH_SHORT).show());
-            }
+        awsS3Helper.uploadContact(contactFile, updatedFileContent, (success, fileName) -> {
+            runOnUiThread(() -> {
+                if (success) {
+                    Toast.makeText(this, "Contact updated", Toast.LENGTH_SHORT).show();
+                    setEditingEnabled(false);
+
+                    // Redirect back to ContactListActivity
+                    Intent intent = new Intent(this, ContactListActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(this, "Update failed", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
+
 }

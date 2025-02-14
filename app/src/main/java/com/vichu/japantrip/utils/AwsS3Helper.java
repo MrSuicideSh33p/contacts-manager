@@ -3,6 +3,8 @@ package com.vichu.japantrip.utils;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -65,19 +67,6 @@ public class AwsS3Helper {
         }
     }
 
-    public void uploadFile(File file) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            try {
-                String fileName = "contacts/" + UUID.randomUUID().toString() + ".txt";
-                s3Client.putObject(new PutObjectRequest(BUCKET_NAME, fileName, file));
-                Log.d(TAG, "File uploaded successfully to S3: " + fileName);
-            } catch (Exception e) {
-                Log.e(TAG, "File upload failed: " + e.getMessage());
-            }
-        });
-    }
-
     public void fetchContactList(S3ContactFetchListener listener) {
         new Thread(() -> {
             try {
@@ -118,9 +107,12 @@ public class AwsS3Helper {
         }).start();
     }
 
-    public void uploadContact(String fileName, String fileContent, UploadListener listener) {
+    public void uploadContact(@Nullable String existingFileName, String fileContent, UploadListener listener) {
         new Thread(() -> {
             try {
+                // Determine filename (reuse existing if provided, otherwise create new)
+                String fileName = (existingFileName != null) ? existingFileName : "contacts/" + UUID.randomUUID().toString() + ".txt";
+
                 // Convert content to input stream
                 InputStream inputStream = new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8));
 
@@ -131,9 +123,11 @@ public class AwsS3Helper {
                 // Upload to S3 (overwrites if file already exists)
                 s3Client.putObject(BUCKET_NAME, fileName, inputStream, metadata);
 
-                listener.onSuccess(true); // Upload successful
+                Log.d(TAG, "File uploaded successfully: " + fileName);
+                listener.onSuccess(true, fileName);
             } catch (Exception e) {
-                listener.onSuccess(false); // Upload failed
+                Log.e(TAG, "File upload failed: " + e.getMessage());
+                listener.onSuccess(false, null);
             }
         }).start();
     }
@@ -155,7 +149,7 @@ public class AwsS3Helper {
     }
 
     public interface UploadListener {
-        void onSuccess(boolean success);
+        void onSuccess(boolean success, String fileName);
     }
 
     @FunctionalInterface
