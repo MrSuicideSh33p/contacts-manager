@@ -1,5 +1,6 @@
 package com.vichu.japantrip.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -28,8 +29,10 @@ public class ContactEntryActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.contactEntryToolbar);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(v -> finish());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
 
         // Initialize UI elements
         nameInput = findViewById(R.id.et_name);
@@ -43,6 +46,30 @@ public class ContactEntryActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        if (isAnyFieldFilled()) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Confirm Exit")
+                    .setMessage("The text you entered will be lost. Are you sure you want to proceed?")
+                    .setPositiveButton("Yes", (dialog, which) -> super.onBackPressed()) // Go back
+                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss()) // Stay on page
+                    .show();
+        } else {
+            super.onBackPressed(); // No changes, exit normally
+        }
+    }
+
+    private boolean isAnyFieldFilled() {
+        return !nameInput.getText().toString().trim().isEmpty() ||
+                !nickNameInput.getText().toString().trim().isEmpty() ||
+                !phoneInput.getText().toString().trim().isEmpty() ||
+                !emailInput.getText().toString().trim().isEmpty() ||
+                !fieldInput.getText().toString().trim().isEmpty() ||
+                !universityInput.getText().toString().trim().isEmpty() ||
+                !notesInput.getText().toString().trim().isEmpty();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.contact_entry_menu, menu);
         return true;
@@ -51,13 +78,26 @@ public class ContactEntryActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish(); // Handle back button
+            confirmExit();
             return true;
         } else if (item.getItemId() == R.id.action_save) {
             saveContact(); // Handle save button
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void confirmExit() {
+        if (isAnyFieldFilled()) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Confirm Exit")
+                    .setMessage("The text you entered will be lost. Are you sure you want to proceed?")
+                    .setPositiveButton("Yes", (dialog, which) -> finish()) // Close activity
+                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss()) // Stay on page
+                    .show();
+        } else {
+            finish(); // Exit if no fields are filled
+        }
     }
 
     private void saveContact() {

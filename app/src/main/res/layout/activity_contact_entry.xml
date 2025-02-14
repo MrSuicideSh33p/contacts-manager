@@ -51,7 +51,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="John"
-        android:padding="10dp"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"/>
@@ -70,7 +69,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="+48 6942069420"
-        android:padding="10dp"
         android:inputType="phone"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
@@ -90,7 +88,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="john.doe@gmail.com"
-        android:padding="10dp"
         android:inputType="textEmailAddress"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
@@ -110,7 +107,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Molecular Biology"
-        android:padding="10dp"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"/>
@@ -129,7 +125,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Jagiellonian University"
-        android:padding="10dp"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"/>
@@ -148,7 +143,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Wolbachia Conference 2025"
-        android:padding="10dp"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"/>
