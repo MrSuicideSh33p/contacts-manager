@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ import java.util.Objects;
 
 public class ContactListActivity extends AppCompatActivity {
 
+    private TextView progressText;
     private ListView contactListView;
     private ImageView emptyStateImage;
     private ProgressBar progressBar;
@@ -44,6 +46,7 @@ public class ContactListActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
 
         ListView contactListView = findViewById(R.id.contactListView);
+        progressText = findViewById(R.id.progressText);
         progressBar = findViewById(R.id.progressBar);
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, contactNames);
@@ -63,6 +66,7 @@ public class ContactListActivity extends AppCompatActivity {
 
     private void fetchContacts() {
         progressBar.setVisibility(View.VISIBLE);
+        progressText.setVisibility(View.VISIBLE);
 
         awsS3Helper.fetchContactList(new AwsS3Helper.S3ContactFetchListener() {
             @Override
@@ -75,6 +79,7 @@ public class ContactListActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     adapter.notifyDataSetChanged();
                     progressBar.setVisibility(View.GONE);
+                    progressText.setVisibility(View.GONE);
 
                     if (contactNames.isEmpty()) {
                         emptyStateImage.setVisibility(View.VISIBLE);
@@ -91,6 +96,7 @@ public class ContactListActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     Toast.makeText(ContactListActivity.this, "Error fetching contacts: " + error, Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
+                    progressText.setVisibility(View.GONE);
                 });
             }
         });
