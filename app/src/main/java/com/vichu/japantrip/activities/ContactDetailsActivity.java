@@ -44,12 +44,6 @@ public class ContactDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.contactDetailsToolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
-        String contactName = getIntent().getStringExtra("CONTACT_NAME");
-        if (contactName != null) {
-            getSupportActionBar().setTitle(contactName);
-        }
-
         toolbar.setNavigationOnClickListener(v -> finish());
 
         Intent intent = getIntent();
