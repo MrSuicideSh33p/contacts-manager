@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set the Toolbar
+        // Initialize Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
-        // Enable Toolbar button to open drawer
+        // Setup the Drawer Toggle
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        // Set Quick Actions Buttons
+        // Set Button Click Listeners
         Button addContactBtn = findViewById(R.id.btn_add_contact);
         Button viewContactsBtn = findViewById(R.id.btn_view_contacts);
 
