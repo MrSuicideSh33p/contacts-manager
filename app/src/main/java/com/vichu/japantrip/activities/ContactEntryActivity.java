@@ -59,12 +59,12 @@ public class ContactEntryActivity extends AppCompatActivity {
 
         ContactData contactData = new ContactData(name, nickName, phone, email, notes);
         String contactContent = contactData.toFileFormat();
+        String fileName = "contacts/" + name.replaceAll("\\s+", "_") + ".txt"; // Ensure a valid file name
 
-        awsS3Helper.uploadContact(null, contactContent, (success, fileName) -> {
+        awsS3Helper.uploadContact(fileName, contactContent, success -> {
             runOnUiThread(() -> {
                 if (success) {
                     Toast.makeText(this, "Contact uploaded to S3!", Toast.LENGTH_SHORT).show();
-                    // Redirect to MainActivity after successful upload
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);

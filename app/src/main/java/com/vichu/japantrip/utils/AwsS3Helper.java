@@ -3,40 +3,43 @@ package com.vichu.japantrip.utils;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
-
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.vichu.japantrip.R;
 import com.vichu.japantrip.models.ContactData;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class AwsS3Helper {
 
     private static final String TAG = "AwsS3Helper";
     private static final String BUCKET_NAME = "the-japan-trip-bucket";
+    private static final String ENDPOINT = "s3.us-east-1.amazonaws.com";
 
     private AmazonS3 s3Client;
 
@@ -60,6 +63,7 @@ public class AwsS3Helper {
 
             s3Client = new AmazonS3Client(new BasicAWSCredentials(accessKey, secretKey));
             s3Client.setRegion(Region.getRegion(Regions.US_EAST_1));
+            s3Client.setEndpoint(ENDPOINT);
 
             Log.d(TAG, "Amazon S3 client initialized successfully.");
         } catch (Exception e) {
@@ -70,6 +74,35 @@ public class AwsS3Helper {
     public void fetchContactList(S3ContactFetchListener listener) {
         new Thread(() -> {
             try {
+                Map<String, String> metadataMap = new HashMap<>();
+
+                // Try fetching metadata.json
+                try {
+                    S3Object metadataObject = s3Client.getObject(BUCKET_NAME, "contacts/metadata.json");
+                    InputStream metadataStream = metadataObject.getObjectContent();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(metadataStream));
+
+                    StringBuilder jsonBuilder = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        jsonBuilder.append(line);
+                    }
+                    reader.close();
+
+                    // Convert JSON to Map
+                    JSONObject metadataJson = new JSONObject(jsonBuilder.toString());
+                    for (Iterator<String> it = metadataJson.keys(); it.hasNext(); ) {
+                        String key = it.next();
+                        metadataMap.put(key, metadataJson.getString(key));
+                    }
+                    Log.d(TAG, "Metadata loaded successfully: " + metadataMap.size() + " contacts.");
+                } catch (AmazonS3Exception e) {
+                    Log.e(TAG, "metadata.json not found. Proceeding without it.");
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error parsing metadata.json: " + e.getMessage());
+                }
+
+                // Fetch all contact files from S3
                 ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(BUCKET_NAME).withPrefix("contacts/");
                 ObjectListing objectListing = s3Client.listObjects(listObjectsRequest);
                 List<String> names = new ArrayList<>();
@@ -77,11 +110,24 @@ public class AwsS3Helper {
 
                 for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
                     String fileName = objectSummary.getKey();
+
+                    // Ignore metadata.json itself
+                    if (fileName.equals("contacts/metadata.json")) continue;
+
                     files.add(fileName);
-                    names.add(fileName.substring(fileName.lastIndexOf('/') + 1));
+
+                    // Retrieve the contact name from metadata.json
+                    if (metadataMap.containsKey(fileName)) {
+                        names.add(metadataMap.get(fileName));
+                    } else {
+                        names.add(fileName.substring(fileName.lastIndexOf('/') + 1)); // Fallback to UUID
+                    }
                 }
+
+                Log.d(TAG, "Fetched " + files.size() + " contacts from S3.");
                 listener.onSuccess(names, files);
             } catch (Exception e) {
+                Log.e(TAG, "Error fetching contacts: " + e.getMessage());
                 listener.onError(e.getMessage());
             }
         }).start();
@@ -107,29 +153,89 @@ public class AwsS3Helper {
         }).start();
     }
 
-    public void uploadContact(@Nullable String existingFileName, String fileContent, UploadListener listener) {
+    public void uploadContact(String fileName, String fileContent, UploadListener listener) {
         new Thread(() -> {
             try {
-                // Determine filename (reuse existing if provided, otherwise create new)
-                String fileName = (existingFileName != null) ? existingFileName : "contacts/" + UUID.randomUUID().toString() + ".txt";
+                if (fileName == null || fileName.isEmpty()) {
+                    throw new IllegalArgumentException("Filename cannot be null or empty");
+                }
 
-                // Convert content to input stream
                 InputStream inputStream = new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8));
 
-                // Prepare metadata
                 ObjectMetadata metadata = new ObjectMetadata();
                 metadata.setContentLength(fileContent.length());
 
-                // Upload to S3 (overwrites if file already exists)
+                Log.d("S3_UPLOAD", "Uploading file: " + fileName);
+
                 s3Client.putObject(BUCKET_NAME, fileName, inputStream, metadata);
 
-                Log.d(TAG, "File uploaded successfully: " + fileName);
-                listener.onSuccess(true, fileName);
+                Log.d("S3_UPLOAD", "File uploaded successfully: " + fileName);
+
+                // Extract contact name from fileContent
+                String contactName = extractContactName(fileContent);
+
+                // Update metadata file
+                updateMetadataFile(fileName, contactName);
+
+                listener.onSuccess(true);
+            } catch (AmazonServiceException e) {
+                Log.e("S3_UPLOAD", "AWS Service error: " + e.getErrorMessage());
+                listener.onSuccess(false);
+            } catch (AmazonClientException e) {
+                Log.e("S3_UPLOAD", "AWS Client error: " + e.getMessage());
+                listener.onSuccess(false);
+            } catch (IllegalArgumentException e) {
+                Log.e("S3_UPLOAD", "Invalid Argument: " + e.getMessage());
+                listener.onSuccess(false);
             } catch (Exception e) {
-                Log.e(TAG, "File upload failed: " + e.getMessage());
-                listener.onSuccess(false, null);
+                Log.e("S3_UPLOAD", "Unexpected error: " + e.getMessage());
+                listener.onSuccess(false);
             }
         }).start();
+    }
+
+
+    // Method to extract name (assuming first line is the name)
+    private String extractContactName(String fileContent) {
+        return fileContent.split("\n")[0].trim(); // Assuming first line is the name
+    }
+
+    // Update metadata.json
+    private void updateMetadataFile(String fileName, String contactName) {
+        String metadataKey = "contacts/metadata.json";
+
+        try {
+            // Check if metadata.json exists
+            S3Object metadataObject;
+            String existingMetadataJson = "{}"; // Default empty JSON
+
+            try {
+                metadataObject = s3Client.getObject(BUCKET_NAME, metadataKey);
+                existingMetadataJson = new String(metadataObject.getObjectContent().readAllBytes(), StandardCharsets.UTF_8);
+                Log.d("S3_METADATA", "Existing metadata loaded successfully.");
+            } catch (AmazonS3Exception e) {
+                if (e.getStatusCode() == 404) {
+                    Log.w("S3_METADATA", "Metadata file not found. Creating a new one.");
+                } else {
+                    throw e;
+                }
+            }
+
+            // Convert existing metadata to JSON object
+            JSONObject metadataJson = new JSONObject(existingMetadataJson);
+            metadataJson.put(fileName, contactName);
+
+            // Upload updated metadata
+            InputStream updatedMetadataStream = new ByteArrayInputStream(metadataJson.toString().getBytes(StandardCharsets.UTF_8));
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(metadataJson.toString().length());
+
+            s3Client.putObject(BUCKET_NAME, metadataKey, updatedMetadataStream, metadata);
+            Log.d("S3_METADATA", "Metadata file updated successfully.");
+
+        } catch (Exception e) {
+            Log.e("S3_METADATA", "Failed to update metadata file: " + e.getMessage());
+        }
     }
 
     public void deleteContact(String fileName, DeleteListener listener) {
@@ -149,7 +255,7 @@ public class AwsS3Helper {
     }
 
     public interface UploadListener {
-        void onSuccess(boolean success, String fileName);
+        void onSuccess(boolean success);
     }
 
     @FunctionalInterface

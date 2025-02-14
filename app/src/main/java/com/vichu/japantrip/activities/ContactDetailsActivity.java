@@ -133,7 +133,7 @@ public class ContactDetailsActivity extends AppCompatActivity {
         ContactData updatedContact = new ContactData(newName, newNickName, newPhone, newEmail, newNotes);
         String updatedFileContent = updatedContact.toFileFormat();
 
-        awsS3Helper.uploadContact(contactFile, updatedFileContent, (success, fileName) -> {
+        awsS3Helper.uploadContact(contactFile, updatedFileContent, (success) -> {
             runOnUiThread(() -> {
                 if (success) {
                     Toast.makeText(this, "Contact updated", Toast.LENGTH_SHORT).show();
