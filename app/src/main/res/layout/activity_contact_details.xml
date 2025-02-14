@@ -45,6 +45,20 @@
         android:enabled="false"/>
 
     <EditText
+        android:id="@+id/fieldText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Field of Research (Optional)"
+        android:enabled="false"/>
+
+    <EditText
+        android:id="@+id/universityText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Affiliated University (Optional)"
+        android:enabled="false"/>
+
+    <EditText
         android:id="@+id/notesText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

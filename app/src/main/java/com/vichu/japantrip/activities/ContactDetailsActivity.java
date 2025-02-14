@@ -20,9 +20,9 @@ import java.util.Objects;
 
 public class ContactDetailsActivity extends AppCompatActivity {
 
-    private EditText nameEditText, nickNameEditText, phoneEditText, emailEditText, notesText;
+    private EditText nameEditText, nickNameEditText, phoneEditText, emailEditText, fieldText, universityText, notesText;
     private AwsS3Helper awsS3Helper;
-    private String contactFile, originalName;
+    private String contactFile;
     private boolean isEditing = false;
     private MenuItem saveMenuItem;
 
@@ -35,6 +35,8 @@ public class ContactDetailsActivity extends AppCompatActivity {
         nickNameEditText = findViewById(R.id.nickNameEditText);
         phoneEditText = findViewById(R.id.phoneEditText);
         emailEditText = findViewById(R.id.emailEditText);
+        fieldText = findViewById(R.id.fieldText);
+        universityText = findViewById(R.id.universityText);
         notesText = findViewById(R.id.notesText);
 
         awsS3Helper = new AwsS3Helper(this);
@@ -51,7 +53,6 @@ public class ContactDetailsActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
 
         Intent intent = getIntent();
-        originalName = intent.getStringExtra("contactName");
         contactFile = intent.getStringExtra("contactFile");
 
         loadContactDetails();
@@ -70,6 +71,8 @@ public class ContactDetailsActivity extends AppCompatActivity {
                     nickNameEditText.setText(contactData.getNickName());
                     phoneEditText.setText(contactData.getPhone());
                     emailEditText.setText(contactData.getEmail());
+                    fieldText.setText(contactData.getField());
+                    universityText.setText(contactData.getUniversity());
                     notesText.setText(contactData.getNotes());
                 });
             }
@@ -81,6 +84,8 @@ public class ContactDetailsActivity extends AppCompatActivity {
         nickNameEditText.setEnabled(enabled);
         phoneEditText.setEnabled(enabled);
         emailEditText.setEnabled(enabled);
+        fieldText.setEnabled(enabled);
+        universityText.setEnabled(enabled);
         notesText.setEnabled(enabled);
         isEditing = enabled;
         if (saveMenuItem != null) {
@@ -137,6 +142,8 @@ public class ContactDetailsActivity extends AppCompatActivity {
         String newNickName = nickNameEditText.getText().toString().trim();
         String newPhone = phoneEditText.getText().toString().trim();
         String newEmail = emailEditText.getText().toString().trim();
+        String newField = fieldText.getText().toString().trim();
+        String newUniversity = universityText.getText().toString().trim();
         String newNotes = notesText.getText().toString().trim();
 
         if (newName.isEmpty()) {
@@ -144,7 +151,7 @@ public class ContactDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        ContactData updatedContact = new ContactData(newName, newNickName, newPhone, newEmail, newNotes);
+        ContactData updatedContact = new ContactData(newName, newNickName, newPhone, newEmail, newField, newUniversity, newNotes);
         String updatedFileContent = updatedContact.toFileFormat();
 
         awsS3Helper.uploadContact(contactFile, updatedFileContent, (success) -> {

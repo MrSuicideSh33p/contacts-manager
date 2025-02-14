@@ -18,7 +18,7 @@ import java.util.Objects;
 
 public class ContactEntryActivity extends AppCompatActivity {
 
-    private EditText nameInput, nickNameInput, phoneInput, emailInput, notesInput;
+    private EditText nameInput, nickNameInput, phoneInput, emailInput, fieldInput, universityInput, notesInput;
     private AwsS3Helper awsS3Helper;
 
     @Override
@@ -36,6 +36,8 @@ public class ContactEntryActivity extends AppCompatActivity {
         nickNameInput = findViewById(R.id.et_nickname);
         phoneInput = findViewById(R.id.et_phone);
         emailInput = findViewById(R.id.et_email);
+        fieldInput = findViewById(R.id.et_field);
+        universityInput = findViewById(R.id.et_university);
         notesInput = findViewById(R.id.et_notes);
         awsS3Helper = new AwsS3Helper(this);
     }
@@ -63,6 +65,8 @@ public class ContactEntryActivity extends AppCompatActivity {
         String nickName = nickNameInput.getText().toString().trim();
         String phone = phoneInput.getText().toString().trim();
         String email = emailInput.getText().toString().trim();
+        String field = fieldInput.getText().toString().trim();
+        String university = universityInput.getText().toString().trim();
         String notes = notesInput.getText().toString().trim();
 
         if (name.isEmpty()) {
@@ -70,7 +74,7 @@ public class ContactEntryActivity extends AppCompatActivity {
             return;
         }
 
-        ContactData contactData = new ContactData(name, nickName, phone, email, notes);
+        ContactData contactData = new ContactData(name, nickName, phone, email, field, university, notes);
         String contactContent = contactData.toFileFormat();
         String fileName = "contacts/" + name.replaceAll("\\s+", "_") + ".txt"; // Ensure a valid file name
 

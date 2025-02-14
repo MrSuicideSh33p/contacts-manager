@@ -19,7 +19,6 @@
         app:navigationIcon="@drawable/ic_back_arrow"
         app:menu="@menu/contact_entry_menu"/>
 
-
     <EditText
         android:id="@+id/et_name"
         android:layout_width="match_parent"
@@ -49,6 +48,20 @@
         android:hint="Email Id (Optional)"
         android:padding="10dp"
         android:inputType="textEmailAddress"/>
+
+    <EditText
+        android:id="@+id/et_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Field of Research (Optional)"
+        android:padding="10dp"/>
+
+    <EditText
+        android:id="@+id/et_university"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Affiliated University (Optional)"
+        android:padding="10dp"/>
 
     <EditText
         android:id="@+id/et_notes"
