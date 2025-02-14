@@ -2,10 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
-    android:gravity="center"
     android:background="@color/white">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/contactEntryToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:title="Add Contact"
+        app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:navigationIcon="@drawable/ic_back_arrow"
+        app:menu="@menu/contact_entry_menu"/>
+
 
     <EditText
         android:id="@+id/et_name"
@@ -44,11 +57,4 @@
         android:hint="Notes (Optional)"
         android:padding="10dp"/>
 
-    <Button
-        android:id="@+id/btn_save_contact"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save Contact"
-        android:padding="10dp"
-        android:layout_marginTop="20dp"/>
 </LinearLayout>

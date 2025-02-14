@@ -10,10 +10,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.vichu.japantrip.R;
 import com.vichu.japantrip.models.ContactData;
 import com.vichu.japantrip.utils.AwsS3Helper;
+
+import java.util.Objects;
 
 public class ContactDetailsActivity extends AppCompatActivity {
 
@@ -35,6 +38,17 @@ public class ContactDetailsActivity extends AppCompatActivity {
         notesText = findViewById(R.id.notesText);
 
         awsS3Helper = new AwsS3Helper(this);
+
+        Toolbar toolbar = findViewById(R.id.contactDetailsToolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+        String contactName = getIntent().getStringExtra("CONTACT_NAME");
+        if (contactName != null) {
+            getSupportActionBar().setTitle(contactName);
+        }
+
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         Intent intent = getIntent();
         originalName = intent.getStringExtra("contactName");

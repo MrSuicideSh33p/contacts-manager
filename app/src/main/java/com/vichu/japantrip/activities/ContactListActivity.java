@@ -8,12 +8,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.ArrayList;
-import java.util.List;
+import androidx.appcompat.widget.Toolbar;
+
 import com.vichu.japantrip.R;
 import com.vichu.japantrip.utils.AwsS3Helper;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class ContactListActivity extends AppCompatActivity {
 
@@ -32,6 +37,11 @@ public class ContactListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contact_list);
         emptyStateImage = findViewById(R.id.emptyStateImage);
         contactListView = findViewById(R.id.contactListView);
+
+        Toolbar toolbar = findViewById(R.id.contactListToolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         ListView contactListView = findViewById(R.id.contactListView);
         progressBar = findViewById(R.id.progressBar);

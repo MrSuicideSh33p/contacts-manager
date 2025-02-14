@@ -2,24 +2,23 @@ package com.vichu.japantrip.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.vichu.japantrip.R;
 import com.vichu.japantrip.models.ContactData;
 import com.vichu.japantrip.utils.AwsS3Helper;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.util.Objects;
 
 public class ContactEntryActivity extends AppCompatActivity {
 
     private EditText nameInput, nickNameInput, phoneInput, emailInput, notesInput;
-    private Button saveButton;
     private AwsS3Helper awsS3Helper;
 
     @Override
@@ -27,22 +26,36 @@ public class ContactEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_entry);
 
+        Toolbar toolbar = findViewById(R.id.contactEntryToolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> finish());
+
         // Initialize UI elements
         nameInput = findViewById(R.id.et_name);
         nickNameInput = findViewById(R.id.et_nickname);
         phoneInput = findViewById(R.id.et_phone);
         emailInput = findViewById(R.id.et_email);
         notesInput = findViewById(R.id.et_notes);
-        saveButton = findViewById(R.id.btn_save_contact);
         awsS3Helper = new AwsS3Helper(this);
+    }
 
-        // Handle save button click
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveContact();
-            }
-        });
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.contact_entry_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // Handle back button
+            return true;
+        } else if (item.getItemId() == R.id.action_save) {
+            saveContact(); // Handle save button
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void saveContact() {
