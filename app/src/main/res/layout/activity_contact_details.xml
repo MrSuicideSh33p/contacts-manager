@@ -16,52 +16,137 @@
         app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
         app:navigationIcon="@drawable/ic_back_arrow"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
+
     <EditText
         android:id="@+id/nameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name"
-        android:enabled="false"/>
+        android:hint=""
+        android:enabled="false"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nickname (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/nickNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nickname (Optional)"
-        android:enabled="false"/>
+        android:hint=""
+        android:enabled="false"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone Number (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/phoneEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Phone Number (Optional)"
-        android:enabled="false"/>
+        android:hint=""
+        android:enabled="false"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email Id (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/emailEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email Id (Optional)"
-        android:enabled="false"/>
+        android:hint=""
+        android:enabled="false"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Field of Research (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/fieldText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Field of Research (Optional)"
-        android:enabled="false"/>
+        android:hint=""
+        android:enabled="false"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Affiliated University (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/universityText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Affiliated University (Optional)"
-        android:enabled="false"/>
+        android:hint=""
+        android:enabled="false"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notes (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/notesText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Notes (Optional)"
-        android:enabled="false"/>
+        android:hint=""
+        android:enabled="false"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
 </LinearLayout>

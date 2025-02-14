@@ -19,55 +19,138 @@
         app:navigationIcon="@drawable/ic_back_arrow"
         app:menu="@menu/contact_entry_menu"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
+
     <EditText
         android:id="@+id/et_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name"
-        android:padding="10dp"/>
+        android:hint="John Doe"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nickname (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/et_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nickname (Optional)"
-        android:padding="10dp"/>
+        android:hint="John"
+        android:padding="10dp"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone Number (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/et_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Phone Number (Optional)"
+        android:hint="+48 6942069420"
         android:padding="10dp"
-        android:inputType="phone"/>
+        android:inputType="phone"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email Id (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/et_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email Id (Optional)"
+        android:hint="john.doe@gmail.com"
         android:padding="10dp"
-        android:inputType="textEmailAddress"/>
+        android:inputType="textEmailAddress"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Field of Research (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/et_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Field of Research (Optional)"
-        android:padding="10dp"/>
+        android:hint="Molecular Biology"
+        android:padding="10dp"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Affiliated University (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/et_university"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Affiliated University (Optional)"
-        android:padding="10dp"/>
+        android:hint="Jagiellonian University"
+        android:padding="10dp"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notes (Optional)"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:layout_marginBottom="2dp"/>
 
     <EditText
         android:id="@+id/et_notes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Notes (Optional)"
-        android:padding="10dp"/>
+        android:hint="Wolbachia Conference 2025"
+        android:padding="10dp"
+        android:background="@drawable/edit_text_bg"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"/>
 
 </LinearLayout>

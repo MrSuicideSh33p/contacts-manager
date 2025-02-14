@@ -1,13 +1,13 @@
 package com.vichu.japantrip.models;
 
 public class ContactData {
-    private String name;
-    private String nickName;
-    private String phone;
-    private String email;
-    private String field;
-    private String university;
-    private String notes;
+    private final String name;
+    private final String nickName;
+    private final String phone;
+    private final String email;
+    private final String field;
+    private final String university;
+    private final String notes;
 
     public ContactData(String name, String nickName, String phone, String email, String field, String university, String notes) {
         this.name = name;
