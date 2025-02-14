@@ -11,6 +11,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -18,9 +19,11 @@ import com.vichu.japantrip.R;
 import com.vichu.japantrip.models.ContactData;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -115,6 +118,26 @@ public class AwsS3Helper {
         }).start();
     }
 
+    public void uploadContact(String fileName, String fileContent, UploadListener listener) {
+        new Thread(() -> {
+            try {
+                // Convert content to input stream
+                InputStream inputStream = new ByteArrayInputStream(fileContent.getBytes(StandardCharsets.UTF_8));
+
+                // Prepare metadata
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentLength(fileContent.length());
+
+                // Upload to S3 (overwrites if file already exists)
+                s3Client.putObject(BUCKET_NAME, fileName, inputStream, metadata);
+
+                listener.onSuccess(true); // Upload successful
+            } catch (Exception e) {
+                listener.onSuccess(false); // Upload failed
+            }
+        }).start();
+    }
+
     public void deleteContact(String fileName, DeleteListener listener) {
         new Thread(() -> {
             try {
@@ -131,6 +154,10 @@ public class AwsS3Helper {
         void onError(String error);
     }
 
+    public interface UploadListener {
+        void onSuccess(boolean success);
+    }
+
     @FunctionalInterface
     public interface ContactDataListener {
         void onResult(ContactData contactData, String errorMessage);
@@ -140,4 +167,3 @@ public class AwsS3Helper {
         void onSuccess(boolean success);
     }
 }
-

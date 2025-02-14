@@ -131,22 +131,24 @@ public class ContactDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        ContactData updatedContact = new ContactData(newName, newNickName, newPhone, newEmail, newNotes);
+        ContactData updatedContact = new ContactData(newName, "", newPhone, newEmail, "");
+        String updatedFileContent = updatedContact.toFileFormat();
 
-        File tempFile = new File(getCacheDir(), "temp_contact.txt");
-        try (FileWriter writer = new FileWriter(tempFile)) {
-            writer.write(updatedContact.toFileFormat());
-            writer.flush();
-
-            awsS3Helper.uploadFile(tempFile);
-            runOnUiThread(() -> {
-                Toast.makeText(this, "Contact updated", Toast.LENGTH_SHORT).show();
-                setEditingEnabled(false);
-                setResult(RESULT_OK);
-            });
-
-        } catch (IOException e) {
-            runOnUiThread(() -> Toast.makeText(this, "Failed to save contact", Toast.LENGTH_SHORT).show());
-        }
+        awsS3Helper.deleteContact(contactFile, success -> {
+            if (success) {
+                awsS3Helper.uploadContact(contactFile, updatedFileContent, uploadSuccess -> {
+                    if (uploadSuccess) {
+                        runOnUiThread(() -> {
+                            Toast.makeText(this, "Contact updated", Toast.LENGTH_SHORT).show();
+                            setEditingEnabled(false);
+                        });
+                    } else {
+                        runOnUiThread(() -> Toast.makeText(this, "Update failed", Toast.LENGTH_SHORT).show());
+                    }
+                });
+            } else {
+                runOnUiThread(() -> Toast.makeText(this, "Failed to delete old contact", Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 }
