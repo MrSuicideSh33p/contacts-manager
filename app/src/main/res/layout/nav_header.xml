@@ -11,7 +11,7 @@
         android:id="@+id/sakura_logo"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/sakura_flower"
+        android:src="@drawable/icon"
         android:contentDescription="Sakura Logo" />
 
     <TextView
