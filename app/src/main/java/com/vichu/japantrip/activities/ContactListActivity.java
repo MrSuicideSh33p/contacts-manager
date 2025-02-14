@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -16,6 +17,8 @@ import com.vichu.japantrip.utils.AwsS3Helper;
 
 public class ContactListActivity extends AppCompatActivity {
 
+    private ListView contactListView;
+    private ImageView emptyStateImage;
     private ProgressBar progressBar;
     private ArrayAdapter<String> adapter;
     private final List<String> contactNames = new ArrayList<>();
@@ -27,6 +30,8 @@ public class ContactListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
+        emptyStateImage = findViewById(R.id.emptyStateImage);
+        contactListView = findViewById(R.id.contactListView);
 
         ListView contactListView = findViewById(R.id.contactListView);
         progressBar = findViewById(R.id.progressBar);
@@ -60,6 +65,14 @@ public class ContactListActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     adapter.notifyDataSetChanged();
                     progressBar.setVisibility(View.GONE);
+
+                    if (contactNames.isEmpty()) {
+                        emptyStateImage.setVisibility(View.VISIBLE);
+                        contactListView.setVisibility(View.GONE);
+                    } else {
+                        emptyStateImage.setVisibility(View.GONE);
+                        contactListView.setVisibility(View.VISIBLE);
+                    }
                 });
             }
 

@@ -16,4 +16,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/emptyStateImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/wow_such_empty"
+        android:visibility="gone"
+        android:layout_centerInParent="true"/>
+
 </LinearLayout>
