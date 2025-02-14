@@ -51,7 +51,7 @@
         android:id="@+id/et_nickname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="John"
+        android:hint="Jane"
         android:textColor="@color/very_light_gray"
         android:background="@drawable/edit_text_bg"
         android:paddingTop="6dp"
