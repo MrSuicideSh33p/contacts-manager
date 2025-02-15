@@ -18,6 +18,7 @@
         <!-- Disable default Action Bar -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:fontFamily">@font/montserrat</item>
     </style>
 
 </resources>

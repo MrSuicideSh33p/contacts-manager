@@ -3,7 +3,7 @@ package com.vichu.japantrip.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -42,22 +42,29 @@ public class MainActivity extends AppCompatActivity {
         // Handle Navigation Drawer Clicks
         navigationView.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_add_contact) {
-                openContactEntryScreen();
+                openAddContactScreen();
             } else if (item.getItemId() == R.id.nav_view_contacts) {
                 openContactListScreen();
             } else if (item.getItemId() == R.id.nav_contact_us) {
-                startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
+                openContactUsScreen();
             }
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
 
-        // Set Button Click Listeners
-        Button addContactBtn = findViewById(R.id.btn_add_contact);
-        Button viewContactsBtn = findViewById(R.id.btn_view_contacts);
+        // Find views for the 4 sections inside the middle part
+        LinearLayout addContactSection = findViewById(R.id.add_contact_section);
+        LinearLayout viewContactsSection = findViewById(R.id.view_contacts_section);
+        LinearLayout scheduleSection = findViewById(R.id.schedule_section);
+        LinearLayout contactUsSection = findViewById(R.id.contact_us_section);
 
-        addContactBtn.setOnClickListener(v -> openContactEntryScreen());
-        viewContactsBtn.setOnClickListener(v -> openContactListScreen());
+        // Set click listeners
+        addContactSection.setOnClickListener(v -> openAddContactScreen());
+        viewContactsSection.setOnClickListener(v -> openContactListScreen());
+        contactUsSection.setOnClickListener(v -> openContactUsScreen());
+        scheduleSection.setOnClickListener(v -> {
+            // Placeholder action for schedule
+        });
     }
 
     @Override
@@ -69,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Open Contact Entry Screen
-    private void openContactEntryScreen() {
+    private void openAddContactScreen() {
         Intent intent = new Intent(this, AddContactActivity.class);
         startActivity(intent);
     }
@@ -77,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
     // Open Contact List Screen
     private void openContactListScreen() {
         Intent intent = new Intent(this, ContactListActivity.class);
+        startActivity(intent);
+    }
+
+    // Open Contact Us Screen
+    private void openContactUsScreen() {
+        Intent intent = new Intent(this, ContactUsActivity.class);
         startActivity(intent);
     }
 }

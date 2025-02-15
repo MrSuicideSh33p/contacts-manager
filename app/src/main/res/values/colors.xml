@@ -16,4 +16,7 @@
     <color name="colorSecondary">#03DAC6</color>
     <color name="colorSecondaryVariant">#018786</color>
     <color name="colorOnSecondary">#000000</color>
+    <color name="lightGray">#F5F5F5</color>
+    <color name="lightBlue">#E3F2FD</color>
+    <color name="darkGray">#424242</color>
 </resources>

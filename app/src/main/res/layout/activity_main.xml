@@ -22,10 +22,11 @@
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-        <!-- Content Wrapper -->
+        <!-- Top Section (30%) -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3.5"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -45,7 +46,17 @@
                 android:textStyle="bold"
                 android:text="@string/welcome_text"
                 android:ellipsize="end"/>
+        </LinearLayout>
 
+        <!-- Middle Section (60%) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Quick Actions Title -->
             <TextView
                 android:id="@+id/quickActionsTitle"
                 android:layout_width="wrap_content"
@@ -53,28 +64,145 @@
                 android:text="Quick Actions"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:layout_marginTop="24dp" />
+                android:layout_marginBottom="16dp"/>
+
+            <!-- 4 Sections (Each 15%) -->
+            <LinearLayout
+                android:id="@+id/add_contact_section"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:background="@color/lightGray"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_add_contact"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add Contact"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/darkGray"/>
 
             <LinearLayout
+                android:id="@+id/view_contacts_section"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:background="@color/lightGray"
+                android:clickable="true"
+                android:focusable="true">
 
-                <Button
-                    android:id="@+id/btn_add_contact"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Add Contact" />
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_view_contacts"
+                    android:layout_marginEnd="8dp"/>
 
-                <Button
-                    android:id="@+id/btn_view_contacts"
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="View Contacts" />
+                    android:text="View Contacts"
+                    android:textSize="16sp"/>
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/darkGray"/>
+
+            <LinearLayout
+                android:id="@+id/schedule_section"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:background="@color/lightGray"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_schedule"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Schedule"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/darkGray"/>
+
+            <LinearLayout
+                android:id="@+id/contact_us_section"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="8dp"
+                android:background="@color/lightGray"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_contact_us"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contact Us"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Bottom Section (10%) - Placeholder -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:background="@color/colorPrimary">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Baka Corp "
+                android:textSize="16sp"
+                android:textColor="@android:color/white"/>
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_corp"
+                android:layout_marginEnd="8dp"/>
         </LinearLayout>
     </LinearLayout>
 
