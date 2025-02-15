@@ -2,11 +2,14 @@ package com.vichu.japantrip.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ public class ContactListActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ArrayAdapter<String> adapter;
     private final List<String> contactNames = new ArrayList<>();
+    private final List<String> reusableContactNames = new ArrayList<>();
     private final List<String> contactFiles = new ArrayList<>();
     private AwsS3Helper awsS3Helper;
     private static final int REQUEST_CODE_CONTACT_DETAILS = 1;
@@ -64,6 +68,51 @@ public class ContactListActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.contact_list_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false; // No need to handle submit separately
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    resetList(); // Show all contacts when empty
+                    searchItem.collapseActionView(); // Collapse when "X" is pressed
+                } else {
+                    filterContacts(newText); // Perform fuzzy search
+                }
+                return true;
+            }
+        });
+
+        return true;
+    }
+
+    public void filterContacts(String query) {
+        List<String> filteredList = new ArrayList<>();
+        for (String contact : reusableContactNames) { // Store original list separately
+            if (contact.toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(contact);
+            }
+        }
+        contactNames.clear();
+        contactNames.addAll(filteredList);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void resetList() {
+        contactNames.clear();
+        contactNames.addAll(reusableContactNames);
+        adapter.notifyDataSetChanged();
+    }
+
     private void fetchContacts() {
         progressBar.setVisibility(View.VISIBLE);
         progressText.setVisibility(View.VISIBLE);
@@ -85,6 +134,7 @@ public class ContactListActivity extends AppCompatActivity {
                         emptyStateImage.setVisibility(View.VISIBLE);
                         contactListView.setVisibility(View.GONE);
                     } else {
+                        reusableContactNames.addAll(contactNames);
                         emptyStateImage.setVisibility(View.GONE);
                         contactListView.setVisibility(View.VISIBLE);
                     }
