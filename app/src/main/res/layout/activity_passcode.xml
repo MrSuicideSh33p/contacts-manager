@@ -13,7 +13,7 @@
         android:id="@+id/passcodeDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="••••"
+        android:text="○ ○ ○ ○"
         android:textSize="32sp"
         android:textColor="@android:color/black"
         android:textStyle="bold"
@@ -88,14 +88,11 @@
             android:onClick="onKeypadClick"/>
 
         <!-- Delete Button -->
-        <ImageButton
+        <Button
             android:id="@+id/deleteButton"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_delete"
-            android:onClick="onDeleteClick"/>
+            style="@style/KeypadButton"
+            android:text="⌫"
+            android:background="@drawable/ic_delete" />
     </GridLayout>
 
 </LinearLayout>
