@@ -15,9 +15,7 @@ import com.vichu.japantrip.R;
 import com.vichu.japantrip.models.ContactData;
 import com.vichu.japantrip.utils.AwsS3Helper;
 
-import java.util.Objects;
-
-public class ContactEntryActivity extends AppCompatActivity {
+public class AddContactActivity extends AppCompatActivity {
 
     private EditText nameInput, nickNameInput, phoneInput, emailInput, fieldInput, universityInput, notesInput;
     private AwsS3Helper awsS3Helper;
@@ -25,7 +23,7 @@ public class ContactEntryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contact_entry);
+        setContentView(R.layout.activity_add_contact);
 
         Toolbar toolbar = findViewById(R.id.contactEntryToolbar);
         setSupportActionBar(toolbar);
@@ -110,7 +108,7 @@ public class ContactEntryActivity extends AppCompatActivity {
         String notes = notesInput.getText().toString().trim();
 
         if (name.isEmpty()) {
-            Toast.makeText(ContactEntryActivity.this, "Name field is required!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddContactActivity.this, "Name field is required!", Toast.LENGTH_SHORT).show();
             return;
         }
 

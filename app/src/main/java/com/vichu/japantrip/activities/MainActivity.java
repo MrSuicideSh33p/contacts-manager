@@ -18,7 +18,6 @@ import com.vichu.japantrip.R;
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
 
     @Override
@@ -32,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize DrawerLayout and NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
 
         // Setup the Drawer Toggle
         toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
@@ -46,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
                 openContactEntryScreen();
             } else if (item.getItemId() == R.id.nav_view_contacts) {
                 openContactListScreen();
+            } else if (item.getItemId() == R.id.nav_contact_us) {
+                startActivity(new Intent(MainActivity.this, ContactUsActivity.class));
             }
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Open Contact Entry Screen
     private void openContactEntryScreen() {
-        Intent intent = new Intent(this, ContactEntryActivity.class);
+        Intent intent = new Intent(this, AddContactActivity.class);
         startActivity(intent);
     }
 
