@@ -50,7 +50,6 @@ public class ContactListActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        ListView contactListView = findViewById(R.id.contactListView);
         progressText = findViewById(R.id.progressText);
         progressBar = findViewById(R.id.progressBar);
 
@@ -72,8 +71,9 @@ public class ContactListActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.contact_list_menu, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setIconified(false);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -101,6 +101,7 @@ public class ContactListActivity extends AppCompatActivity {
         searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 searchView.setQuery("", false);  // Clear text when losing focus
+                searchView.setIconified(false);
             }
         });
 
@@ -146,6 +147,7 @@ public class ContactListActivity extends AppCompatActivity {
                         emptyStateImage.setVisibility(View.VISIBLE);
                         contactListView.setVisibility(View.GONE);
                     } else {
+                        reusableContactNames.clear();
                         reusableContactNames.addAll(contactNames);
                         emptyStateImage.setVisibility(View.GONE);
                         contactListView.setVisibility(View.VISIBLE);
