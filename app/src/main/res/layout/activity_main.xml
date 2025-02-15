@@ -65,20 +65,19 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="6dp"
-                android:layout_margin="8dp"
-                android:layout_marginBottom="16dp">
+                android:layout_margin="1dp"
+                android:layout_marginBottom="1dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:orientation="vertical"> <!-- Adjust padding for content -->
+                android:padding="16dp">
 
                 <!-- Background Image -->
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitXY"
                     android:src="@drawable/quick_actions_bg"/>
 
                 <!-- Overlay for Dark Effect -->
