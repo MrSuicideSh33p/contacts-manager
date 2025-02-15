@@ -105,6 +105,9 @@ public class PasscodeActivity extends AppCompatActivity {
         for (int i = 0; i < enteredPasscode.length(); i++) {
             dots.append("● ");
         }
+        for (int i = enteredPasscode.length(); i < 4; i++) {
+            dots.append("○ ");
+        }
         passcodeDots.setText(dots.toString().trim());
     }
 
