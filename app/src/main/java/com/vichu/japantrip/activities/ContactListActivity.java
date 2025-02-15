@@ -35,6 +35,7 @@ public class ContactListActivity extends AppCompatActivity {
     private final List<String> contactNames = new ArrayList<>();
     private final List<String> reusableContactNames = new ArrayList<>(); // Store original list separately
     private final List<String> contactFiles = new ArrayList<>();
+    private final List<Integer> filteredIndices = new ArrayList<>();
     private AwsS3Helper awsS3Helper;
     private static final int REQUEST_CODE_CONTACT_DETAILS = 1;
 
@@ -63,7 +64,10 @@ public class ContactListActivity extends AppCompatActivity {
         contactListView.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(ContactListActivity.this, ContactDetailsActivity.class);
             intent.putExtra("contactName", contactNames.get(position));
-            intent.putExtra("contactFile", contactFiles.get(position));
+
+            int originalIndex = (filteredIndices.isEmpty()) ? position : filteredIndices.get(position);
+            intent.putExtra("contactFile", contactFiles.get(originalIndex));
+
             startActivityForResult(intent, REQUEST_CODE_CONTACT_DETAILS);
         });
     }
@@ -109,14 +113,16 @@ public class ContactListActivity extends AppCompatActivity {
     }
 
     public void filterContacts(String query) {
-        List<String> filteredList = new ArrayList<>();
-        for (String contact : reusableContactNames) {
-            if (contact.toLowerCase().contains(query.toLowerCase())) {
-                filteredList.add(contact);
+        contactNames.clear();
+        filteredIndices.clear(); // Reset indices tracking
+
+        for (int i = 0; i < reusableContactNames.size(); i++) {
+            if (reusableContactNames.get(i).toLowerCase().contains(query.toLowerCase())) {
+                contactNames.add(reusableContactNames.get(i));
+                filteredIndices.add(i);  // Store the original index
             }
         }
-        contactNames.clear();
-        contactNames.addAll(filteredList);
+
         adapter.notifyDataSetChanged();
     }
 
