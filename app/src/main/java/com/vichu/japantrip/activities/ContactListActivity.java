@@ -26,13 +26,14 @@ import java.util.Objects;
 
 public class ContactListActivity extends AppCompatActivity {
 
+    private MenuItem searchItem;
     private TextView progressText;
     private ListView contactListView;
     private ImageView emptyStateImage;
     private ProgressBar progressBar;
     private ArrayAdapter<String> adapter;
     private final List<String> contactNames = new ArrayList<>();
-    private final List<String> reusableContactNames = new ArrayList<>();
+    private final List<String> reusableContactNames = new ArrayList<>(); // Store original list separately
     private final List<String> contactFiles = new ArrayList<>();
     private AwsS3Helper awsS3Helper;
     private static final int REQUEST_CODE_CONTACT_DETAILS = 1;
@@ -84,11 +85,22 @@ public class ContactListActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
                     resetList(); // Show all contacts when empty
-                    searchItem.collapseActionView(); // Collapse when "X" is pressed
                 } else {
                     filterContacts(newText); // Perform fuzzy search
                 }
                 return true;
+            }
+        });
+
+        searchView.setOnCloseListener(() -> {
+            searchView.setQuery("", false);  // Clear search bar text
+            searchItem.collapseActionView(); // Collapse search view
+            return false;
+        });
+
+        searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                searchView.setQuery("", false);  // Clear text when losing focus
             }
         });
 
@@ -97,7 +109,7 @@ public class ContactListActivity extends AppCompatActivity {
 
     public void filterContacts(String query) {
         List<String> filteredList = new ArrayList<>();
-        for (String contact : reusableContactNames) { // Store original list separately
+        for (String contact : reusableContactNames) {
             if (contact.toLowerCase().contains(query.toLowerCase())) {
                 filteredList.add(contact);
             }
