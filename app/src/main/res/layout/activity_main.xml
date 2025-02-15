@@ -10,7 +10,7 @@
     <!-- Main Content Layout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <!-- Toolbar -->
@@ -25,10 +25,11 @@
         <!-- Top Section (30%) -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingStart="16dp"
+            android:paddingBottom="0dp"
+            android:layout_marginBottom="0dp">
 
             <TextView
                 android:id="@+id/titleText"
@@ -36,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:paddingBottom="8dp"/>
+                android:paddingBottom="2dp"/>
 
             <TextView
                 android:id="@+id/welcomeText"
@@ -46,7 +47,9 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
                 android:text="@string/welcome_text"
-                android:ellipsize="end"/>
+                android:ellipsize="end"
+                android:paddingBottom="0dp"
+                android:layout_marginBottom="0dp"/>
         </LinearLayout>
 
         <!-- Middle Section (60%) -->
@@ -62,14 +65,14 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="6dp"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_margin="16dp"> <!-- Keep only top & bottom margin -->
+                android:layout_margin="8dp"
+                android:layout_marginBottom="16dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"> <!-- Adjust padding for content -->
+                android:padding="16dp"
+                android:orientation="vertical"> <!-- Adjust padding for content -->
 
                 <!-- Background Image -->
                 <ImageView
