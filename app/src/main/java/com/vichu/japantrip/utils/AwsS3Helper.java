@@ -7,6 +7,7 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Region;
@@ -257,26 +258,36 @@ public class AwsS3Helper {
     }
 
     public void downloadFile(File localFile, S3DownloadListener listener) {
-        transferUtility.download(BUCKET_NAME, "schedule/schedule.json", localFile)
-                .setTransferListener(new TransferListener() {
-                    @Override
-                    public void onStateChanged(int id, TransferState state) {
-                        if (state == TransferState.COMPLETED) {
-                            listener.onDownloadSuccess(localFile);
-                        } else if (state == TransferState.FAILED) {
-                            listener.onDownloadFailed();
-                        }
-                    }
+        TransferObserver transferObserver = transferUtility.download(
+                "the-japan-trip-bucket", // Your S3 bucket name
+                "schedule/schedule.json", // Path in S3
+                localFile // Where to save the file locally
+        );
 
-                    @Override
-                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {}
+        transferObserver.setTransferListener(new TransferListener() {
+            @Override
+            public void onStateChanged(int id, TransferState state) {
+                if (state == TransferState.COMPLETED) {
+                    listener.onDownloadSuccess(localFile);
+                } else if (state == TransferState.FAILED) {
+                    listener.onDownloadFailed();
+                }
+            }
 
-                    @Override
-                    public void onError(int id, Exception ex) {
-                        Log.e(TAG, "Error downloading file: ", ex);
-                        listener.onDownloadFailed();
-                    }
-                });
+            @Override
+            public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+                if (bytesTotal > 0) {
+                    int progress = (int) ((bytesCurrent * 100) / bytesTotal);
+                    Log.d("AWS_S3", "Download Progress: " + progress + "%");
+                }
+            }
+
+            @Override
+            public void onError(int id, Exception ex) {
+                Log.e("AWS_S3", "Error during download: " + ex.getMessage(), ex);
+                listener.onDownloadFailed();
+            }
+        });
     }
 
     public interface S3DownloadListener {

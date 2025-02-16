@@ -4,15 +4,13 @@ import java.util.List;
 
 public class ScheduleDay {
     private String date;
+    private String title;
     private int index;
     private List<String> events;
 
-    public ScheduleDay() {
-        // Empty constructor for JSON parsing
-    }
-
-    public ScheduleDay(String date, int index, List<String> events) {
+    public ScheduleDay(String date, String title, int index, List<String> events) {
         this.date = date;
+        this.title = title;
         this.index = index;
         this.events = events;
     }
@@ -21,23 +19,15 @@ public class ScheduleDay {
         return date;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public int getIndex() {
         return index;
     }
 
     public List<String> getEvents() {
         return events;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public void setEvents(List<String> events) {
-        this.events = events;
     }
 }
