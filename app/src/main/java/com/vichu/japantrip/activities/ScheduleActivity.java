@@ -48,7 +48,6 @@ public class ScheduleActivity extends AppCompatActivity {
         }
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        toolbar.setTitleTextColor(Color.BLACK);
 
         recyclerView = findViewById(R.id.recyclerViewSchedule);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
