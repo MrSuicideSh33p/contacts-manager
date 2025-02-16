@@ -12,6 +12,11 @@
             android:title="View Contacts" />
 
         <item
+            android:id="@+id/nav_schedule"
+            android:icon="@drawable/ic_schedule"
+            android:title="Schedule" />
+
+        <item
             android:id="@+id/nav_contact_us"
             android:icon="@drawable/ic_contact_us"
             android:title="Contact Us" />

@@ -5,6 +5,7 @@ package="com.vichu.japantrip">
 <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
+        android:name=".JapanTripApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Japan Trip"
@@ -21,6 +22,7 @@ package="com.vichu.japantrip">
             </intent-filter>
         </activity>
         <activity android:name="com.vichu.japantrip.activities.MainActivity"/>
+        <activity android:name="com.vichu.japantrip.activities.ScheduleActivity"/>
         <activity android:name="com.vichu.japantrip.activities.ContactUsActivity"/>
         <activity android:name="com.vichu.japantrip.activities.AddContactActivity"/>
         <activity android:name="com.vichu.japantrip.activities.ContactListActivity"/>

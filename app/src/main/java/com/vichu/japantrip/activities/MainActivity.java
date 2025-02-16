@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
                 openAddContactScreen();
             } else if (item.getItemId() == R.id.nav_view_contacts) {
                 openContactListScreen();
+            } else if (item.getItemId() == R.id.nav_schedule) {
+                    openScheduleScreen();
             } else if (item.getItemId() == R.id.nav_contact_us) {
                 openContactUsScreen();
             }
@@ -61,10 +63,8 @@ public class MainActivity extends AppCompatActivity {
         // Set click listeners
         addContactSection.setOnClickListener(v -> openAddContactScreen());
         viewContactsSection.setOnClickListener(v -> openContactListScreen());
+        scheduleSection.setOnClickListener(v -> openScheduleScreen());
         contactUsSection.setOnClickListener(v -> openContactUsScreen());
-        scheduleSection.setOnClickListener(v -> {
-            // Placeholder action for schedule
-        });
     }
 
     @Override
@@ -84,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
     // Open Contact List Screen
     private void openContactListScreen() {
         Intent intent = new Intent(this, ContactListActivity.class);
+        startActivity(intent);
+    }
+
+    // Open Schedule Screen
+    private void openScheduleScreen() {
+        Intent intent = new Intent(this, ScheduleActivity.class);
         startActivity(intent);
     }
 

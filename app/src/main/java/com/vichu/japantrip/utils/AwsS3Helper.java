@@ -6,6 +6,9 @@ import android.util.Log;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
@@ -17,6 +20,7 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.vichu.japantrip.JapanTripApplication;
 import com.vichu.japantrip.R;
 import com.vichu.japantrip.models.ContactData;
 
@@ -25,6 +29,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -42,6 +47,7 @@ public class AwsS3Helper {
     private static final String ENDPOINT = "s3.us-east-1.amazonaws.com";
 
     private AmazonS3 s3Client;
+    private TransferUtility transferUtility;
 
     public AwsS3Helper(Context context) {
         initializeS3Client(context);
@@ -64,6 +70,7 @@ public class AwsS3Helper {
             s3Client = new AmazonS3Client(new BasicAWSCredentials(accessKey, secretKey));
             s3Client.setRegion(Region.getRegion(Regions.US_EAST_1));
             s3Client.setEndpoint(ENDPOINT);
+            transferUtility = TransferUtility.builder().s3Client(s3Client).context(JapanTripApplication.getAppContext()).build();
 
             Log.d(TAG, "Amazon S3 client initialized successfully.");
         } catch (Exception e) {
@@ -247,6 +254,34 @@ public class AwsS3Helper {
                 listener.onSuccess(false);
             }
         }).start();
+    }
+
+    public void downloadFile(File localFile, S3DownloadListener listener) {
+        transferUtility.download(BUCKET_NAME, "schedule/schedule.json", localFile)
+                .setTransferListener(new TransferListener() {
+                    @Override
+                    public void onStateChanged(int id, TransferState state) {
+                        if (state == TransferState.COMPLETED) {
+                            listener.onDownloadSuccess(localFile);
+                        } else if (state == TransferState.FAILED) {
+                            listener.onDownloadFailed();
+                        }
+                    }
+
+                    @Override
+                    public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {}
+
+                    @Override
+                    public void onError(int id, Exception ex) {
+                        Log.e(TAG, "Error downloading file: ", ex);
+                        listener.onDownloadFailed();
+                    }
+                });
+    }
+
+    public interface S3DownloadListener {
+        void onDownloadSuccess(File file);
+        void onDownloadFailed();
     }
 
     public interface S3ContactFetchListener {
