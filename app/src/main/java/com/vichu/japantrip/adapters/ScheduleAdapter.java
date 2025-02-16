@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.vichu.japantrip.R;
@@ -33,8 +34,13 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ScheduleDay scheduleDay = scheduleList.get(position);
+        if (position == 0) {
+            holder.divider.setVisibility(View.GONE);
+        } else {
+            holder.divider.setVisibility(View.VISIBLE);
+        }
         holder.textViewDay.setText(scheduleDay.getDate());
         holder.textViewTitle.setText(scheduleDay.getTitle());
     }
@@ -46,11 +52,13 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewDay, textViewTitle;
+        View divider;
 
         public ViewHolder(View itemView) {
             super(itemView);
             textViewDay = itemView.findViewById(R.id.textViewDay);
             textViewTitle = itemView.findViewById(R.id.textViewTitle);
+            divider = itemView.findViewById(R.id.divider);
         }
     }
 }
