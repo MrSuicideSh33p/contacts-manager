@@ -33,8 +33,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.textViewSpeaker.setText(event.getSpeaker());
 
         // Show university if available
-        if (event.getNotes() != null && !event.getNotes().isEmpty()) {
-            holder.textViewUniversity.setText(event.getNotes());
+        if (event.getUniversity() != null && !event.getUniversity().isEmpty()) {
+            holder.textViewUniversity.setText(event.getUniversity());
             holder.textViewUniversity.setVisibility(View.VISIBLE);
         } else {
             holder.textViewUniversity.setVisibility(View.GONE);
