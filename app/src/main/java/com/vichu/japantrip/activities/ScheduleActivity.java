@@ -1,10 +1,10 @@
 package com.vichu.japantrip.activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -52,6 +52,10 @@ public class ScheduleActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewSchedule);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // Initialize the adapter with an empty list
+        scheduleAdapter = new ScheduleAdapter(Collections.emptyList());
+        recyclerView.setAdapter(scheduleAdapter); // Set adapter immediately
+
         progressBar = findViewById(R.id.progressBar);
         awsS3Helper = new AwsS3Helper(this);
 
@@ -73,6 +77,7 @@ public class ScheduleActivity extends AppCompatActivity {
                     updateRecyclerView(scheduleList);
                 } else {
                     Log.e("ScheduleActivity", "Parsed JSON returned null.");
+                    showError("Failed to parse schedule data.");
                 }
 
                 runOnUiThread(() -> progressBar.setVisibility(View.GONE)); // Hide ProgressBar
@@ -81,10 +86,16 @@ public class ScheduleActivity extends AppCompatActivity {
             @Override
             public void onDownloadFailed() {
                 Log.e("ScheduleActivity", "Failed to download schedule.json");
-
-                runOnUiThread(() -> progressBar.setVisibility(View.GONE)); // Hide ProgressBar
+                runOnUiThread(() -> {
+                    progressBar.setVisibility(View.GONE); // Hide ProgressBar
+                    showError("Failed to download schedule. Please check your internet connection.");
+                });
             }
         });
+    }
+
+    private void showError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     private List<ScheduleDay> parseJsonFile(File file) {

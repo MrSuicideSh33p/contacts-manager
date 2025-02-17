@@ -6,9 +6,9 @@ public class ScheduleDay {
     private String date;
     private String title;
     private int index;
-    private List<String> events;
+    private List<Event> events;
 
-    public ScheduleDay(String date, String title, int index, List<String> events) {
+    public ScheduleDay(String date, String title, int index, List<Event> events) {
         this.date = date;
         this.title = title;
         this.index = index;
@@ -27,7 +27,11 @@ public class ScheduleDay {
         return index;
     }
 
-    public List<String> getEvents() {
+    public List<Event> getEvents() {
         return events;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

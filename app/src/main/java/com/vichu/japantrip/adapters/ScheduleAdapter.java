@@ -1,5 +1,6 @@
 package com.vichu.japantrip.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,23 +9,30 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.vichu.japantrip.R;
+import com.vichu.japantrip.activities.DailyScheduleActivity;
 import com.vichu.japantrip.models.ScheduleDay;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
 
-    private List<ScheduleDay> scheduleList;
+    private final List<ScheduleDay> scheduleList;
 
     public ScheduleAdapter(List<ScheduleDay> scheduleList) {
-        this.scheduleList = scheduleList;
+        this.scheduleList = new ArrayList<>(scheduleList);
     }
 
     public void updateData(List<ScheduleDay> newScheduleList) {
-        this.scheduleList.clear();
-        this.scheduleList.addAll(newScheduleList);
-        notifyDataSetChanged(); // Notify RecyclerView of changes
+        if (newScheduleList == null) {
+            this.scheduleList.clear();
+        } else {
+            this.scheduleList.clear();
+            this.scheduleList.addAll(newScheduleList);
+        }
+        notifyDataSetChanged();
     }
 
     @Override
@@ -43,6 +51,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         }
         holder.textViewDay.setText(scheduleDay.getDate());
         holder.textViewTitle.setText(scheduleDay.getTitle());
+
+        // Set click listener for the item
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), DailyScheduleActivity.class);
+            intent.putExtra("dayTitle", scheduleDay.getDate() + " " + scheduleDay.getTitle());
+            intent.putExtra("events", new Gson().toJson(scheduleDay.getEvents())); // Correct key
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override

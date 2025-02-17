@@ -7,6 +7,7 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
@@ -72,6 +73,7 @@ public class AwsS3Helper {
             s3Client.setRegion(Region.getRegion(Regions.US_EAST_1));
             s3Client.setEndpoint(ENDPOINT);
             transferUtility = TransferUtility.builder().s3Client(s3Client).context(JapanTripApplication.getAppContext()).build();
+            TransferNetworkLossHandler.getInstance(context);
 
             Log.d(TAG, "Amazon S3 client initialized successfully.");
         } catch (Exception e) {
@@ -259,8 +261,8 @@ public class AwsS3Helper {
 
     public void downloadFile(File localFile, S3DownloadListener listener) {
         TransferObserver transferObserver = transferUtility.download(
-                "the-japan-trip-bucket", // Your S3 bucket name
-                "schedule/schedule.json", // Path in S3
+                "the-japan-trip-bucket",
+                "schedule/schedule.json",
                 localFile // Where to save the file locally
         );
 
@@ -268,8 +270,10 @@ public class AwsS3Helper {
             @Override
             public void onStateChanged(int id, TransferState state) {
                 if (state == TransferState.COMPLETED) {
+                    Log.d("AWS_S3", "Download completed: " + localFile.getAbsolutePath());
                     listener.onDownloadSuccess(localFile);
                 } else if (state == TransferState.FAILED) {
+                    Log.e("AWS_S3", "Download failed for file: " + localFile.getAbsolutePath());
                     listener.onDownloadFailed();
                 }
             }
