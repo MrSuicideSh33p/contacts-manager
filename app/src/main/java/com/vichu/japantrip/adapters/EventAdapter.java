@@ -31,7 +31,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         // Bind data to views
         holder.textViewTime.setText(event.getTime());
         holder.textViewSpeaker.setText(event.getSpeaker());
-        holder.textViewUniversity.setText(event.getUniversity());
+
+        // Show university if available
+        if (event.getNotes() != null && !event.getNotes().isEmpty()) {
+            holder.textViewUniversity.setText(event.getNotes());
+            holder.textViewUniversity.setVisibility(View.VISIBLE);
+        } else {
+            holder.textViewUniversity.setVisibility(View.GONE);
+        }
 
         // Show topic if available
         if (event.getTopic() != null && !event.getTopic().isEmpty()) {
@@ -39,14 +46,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             holder.textViewTopic.setVisibility(View.VISIBLE);
         } else {
             holder.textViewTopic.setVisibility(View.GONE);
-        }
-
-        // Show notes if available
-        if (event.getNotes() != null && !event.getNotes().isEmpty()) {
-            holder.textViewNotes.setText(event.getNotes());
-            holder.textViewNotes.setVisibility(View.VISIBLE);
-        } else {
-            holder.textViewNotes.setVisibility(View.GONE);
         }
     }
 
@@ -56,7 +55,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewTime, textViewSpeaker, textViewUniversity, textViewTopic, textViewNotes;
+        TextView textViewTime, textViewSpeaker, textViewUniversity, textViewTopic;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,7 +63,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             textViewSpeaker = itemView.findViewById(R.id.textViewSpeaker);
             textViewUniversity = itemView.findViewById(R.id.textViewUniversity);
             textViewTopic = itemView.findViewById(R.id.textViewTopic);
-            textViewNotes = itemView.findViewById(R.id.textViewNotes);
         }
     }
 }
