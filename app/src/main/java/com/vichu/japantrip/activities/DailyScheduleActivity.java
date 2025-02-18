@@ -78,8 +78,13 @@ public class DailyScheduleActivity extends AppCompatActivity {
             if (events.get(i).getIndex() == updatedEvent.getIndex()) {
                 events.set(i, updatedEvent);
                 Log.w("DailyScheduleActivity", "updated event notes is " + updatedEvent.getNotes());
-                scheduleList.get(scheduleIndex).setEvents(events);
-                Log.w("DailyScheduleActivity", "updated schedule title is " + scheduleList.get(i).getTitle());
+
+                for (i = 0; i < scheduleList.size(); i++) {
+                    if (scheduleList.get(i).getScheduleIndex() == scheduleIndex) {
+                        scheduleList.get(i).setEvents(events);
+                        Log.w("DailyScheduleActivity", "updated schedule title is " + scheduleList.get(i).getTitle());
+                    }
+                }
                 uploadUpdatedSchedule();
                 eventAdapter.notifyItemChanged(i);
             }
