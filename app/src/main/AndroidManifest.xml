@@ -27,6 +27,7 @@ package="com.vichu.japantrip">
         <activity android:name="com.vichu.japantrip.activities.ContactUsActivity"/>
         <activity android:name="com.vichu.japantrip.activities.AddContactActivity"/>
         <activity android:name="com.vichu.japantrip.activities.ContactListActivity"/>
+        <activity android:name="com.vichu.japantrip.activities.EventDetailActivity"/>
         <activity android:name="com.vichu.japantrip.activities.DailyScheduleActivity"/>
         <activity android:name="com.vichu.japantrip.activities.ContactDetailsActivity"/>
     </application>

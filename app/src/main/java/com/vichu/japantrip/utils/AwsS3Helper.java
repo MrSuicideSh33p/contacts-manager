@@ -204,6 +204,36 @@ public class AwsS3Helper {
         }).start();
     }
 
+    public void uploadScheduleJson(String jsonContent, UploadListener listener) {
+        new Thread(() -> {
+            try {
+                String filePath = "schedule/schedule.json";  // S3 path
+
+                // Convert JSON content to InputStream
+                byte[] jsonBytes = jsonContent.getBytes(StandardCharsets.UTF_8);
+                InputStream inputStream = new ByteArrayInputStream(jsonBytes);
+
+                // Set metadata with correct content length (in bytes)
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentLength(jsonBytes.length);
+
+                // Upload to S3
+                s3Client.putObject(BUCKET_NAME, filePath, inputStream, metadata);
+
+                Log.d(TAG, "Schedule JSON uploaded successfully.");
+                listener.onSuccess(true);
+            } catch (AmazonServiceException e) {
+                Log.e(TAG, "AWS Service error: " + e.getErrorMessage());
+                listener.onSuccess(false);
+            } catch (AmazonClientException e) {
+                Log.e(TAG, "AWS Client error: " + e.getMessage());
+                listener.onSuccess(false);
+            } catch (Exception e) {
+                Log.e(TAG, "Unexpected error: " + e.getMessage());
+                listener.onSuccess(false);
+            }
+        }).start();
+    }
 
     // Method to extract name (assuming first line is the name)
     private String extractContactName(String fileContent) {

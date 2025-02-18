@@ -122,7 +122,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
             if (scheduleList != null) {
                 // Sort by index before displaying
-                Collections.sort(scheduleList, Comparator.comparingInt(ScheduleDay::getIndex));
+                Collections.sort(scheduleList, Comparator.comparingInt(ScheduleDay::getScheduleIndex));
                 return scheduleList;
             } else {
                 Log.e("ScheduleActivity", "Parsed JSON is null.");

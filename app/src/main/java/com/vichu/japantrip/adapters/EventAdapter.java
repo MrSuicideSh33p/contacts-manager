@@ -1,16 +1,24 @@
 package com.vichu.japantrip.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
 import com.vichu.japantrip.R;
+import com.vichu.japantrip.activities.DailyScheduleActivity;
+import com.vichu.japantrip.activities.EventDetailActivity;
 import com.vichu.japantrip.models.Event;
+
 import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
+    private static final int EVENT_DETAILS_REQUEST_CODE = 100;
     private final List<Event> events;
 
     public EventAdapter(List<Event> events) {
@@ -47,6 +55,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         } else {
             holder.textViewTopic.setVisibility(View.GONE);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), EventDetailActivity.class);
+            intent.putExtra("event", new Gson().toJson(event));
+            ((DailyScheduleActivity) v.getContext()).startActivityForResult(intent, EVENT_DETAILS_REQUEST_CODE);
+        });
     }
 
     @Override

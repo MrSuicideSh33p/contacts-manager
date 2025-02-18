@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
 
-    private final List<ScheduleDay> scheduleList;
+    private final ArrayList<ScheduleDay> scheduleList;
 
     public ScheduleAdapter(List<ScheduleDay> scheduleList) {
         this.scheduleList = new ArrayList<>(scheduleList);
@@ -56,7 +56,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), DailyScheduleActivity.class);
             intent.putExtra("dayTitle", scheduleDay.getDate() + " " + scheduleDay.getTitle());
-            intent.putExtra("events", new Gson().toJson(scheduleDay.getEvents())); // Correct key
+            intent.putExtra("events", new Gson().toJson(scheduleDay.getEvents()));
+            intent.putExtra("scheduleIndex", new Gson().toJson(scheduleDay.getScheduleIndex()));
+            intent.putParcelableArrayListExtra("scheduleList", scheduleList);
             v.getContext().startActivity(intent);
         });
     }
