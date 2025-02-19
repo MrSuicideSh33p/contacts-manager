@@ -1,5 +1,7 @@
 package com.vichu.japantrip.activities;
 
+import static com.vichu.japantrip.utils.JsonHelper.parseJsonFile;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,20 +21,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.vichu.japantrip.R;
 import com.vichu.japantrip.adapters.EventAdapter;
-import com.vichu.japantrip.adapters.ScheduleAdapter;
 import com.vichu.japantrip.models.Event;
 import com.vichu.japantrip.models.ScheduleDay;
 import com.vichu.japantrip.utils.AwsS3Helper;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class DailyScheduleActivity extends AppCompatActivity {
@@ -140,7 +134,7 @@ public class DailyScheduleActivity extends AppCompatActivity {
                     }
                 } else {
                     Log.e("DailyScheduleActivity", "Parsed JSON returned null.");
-                    showError("Failed to parse schedule data.");
+                    Toast.makeText(DailyScheduleActivity.this, "Failed to parse schedule data.", Toast.LENGTH_LONG).show();
                 }
 
                 runOnUiThread(() -> progressBar.setVisibility(View.GONE));
@@ -155,53 +149,10 @@ public class DailyScheduleActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     progressText.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
-                    showError("Failed to download schedule. Please check your internet connection.");
+                    Toast.makeText(DailyScheduleActivity.this, "Failed to download schedule. Please check your internet connection.", Toast.LENGTH_LONG).show();
                 });
             }
         });
-    }
-
-    //TODO: Check possibility to extract this method from ScheduleActivity and DailyScheduleActivity
-    private void showError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
-    //TODO: Check possibility to extract this method from ScheduleActivity and DailyScheduleActivity
-    private List<ScheduleDay> parseJsonFile(File file) {
-        try {
-            // Read the contents of the JSON file
-            FileInputStream fis = new FileInputStream(file);
-            InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
-            BufferedReader reader = new BufferedReader(isr);
-            StringBuilder jsonString = new StringBuilder();
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                jsonString.append(line);
-            }
-
-            reader.close();
-            isr.close();
-            fis.close();
-
-            // Convert JSON to List of ScheduleDay
-            Gson gson = new Gson();
-            Type listType = new TypeToken<List<ScheduleDay>>() {}.getType();
-            List<ScheduleDay> scheduleList = gson.fromJson(jsonString.toString(), listType);
-
-            if (scheduleList != null) {
-                // Sort by index before displaying
-                Collections.sort(scheduleList, Comparator.comparingInt(ScheduleDay::getScheduleIndex));
-                return scheduleList;
-            } else {
-                Log.e("DailyScheduleActivity", "Parsed JSON is null.");
-                return null;
-            }
-
-        } catch (IOException e) {
-            Log.e("DailyScheduleActivity", "Error reading schedule.json: " + e.getMessage(), e);
-            return null;
-        }
     }
 
     private void updateRecyclerView(List<Event> events) {
