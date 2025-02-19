@@ -4,4 +4,5 @@
     <string name="navigation_drawer_close">Close Navigation</string>
     <string name="welcome_text">Welcome to the <i>Wolbachia</i> Conference 2025</string>
     <string name="conference_info"><i>Wolbachia</i> Conference 2025</string>
+    <string name="loading_text">Crunching the latest data, just for you. Hang tight…</string>
 </resources>

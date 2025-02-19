@@ -24,7 +24,7 @@ public class ContactDetailsActivity extends AppCompatActivity {
     private AwsS3Helper awsS3Helper;
     private String contactFile;
     private boolean isEditing = false;
-    private MenuItem saveMenuItem;
+    private MenuItem saveMenuItem, editMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +85,18 @@ public class ContactDetailsActivity extends AppCompatActivity {
         if (saveMenuItem != null) {
             saveMenuItem.setVisible(enabled);
         }
+        if (editMenuItem != null) {
+            editMenuItem.setVisible(enabled ? false : true);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.contact_details_menu, menu);
         saveMenuItem = menu.findItem(R.id.save_contact);
+        editMenuItem = menu.findItem(R.id.edit_contact);
         saveMenuItem.setVisible(false); // Hide save initially
+        editMenuItem.setVisible(true);
         return true;
     }
 
