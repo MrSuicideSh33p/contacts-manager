@@ -1,5 +1,6 @@
 package com.vichu.japantrip.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +31,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ScheduleActivity extends AppCompatActivity {
+
+    private static final int DAILY_SCHEDULE_REQUEST_CODE = 101;
     private RecyclerView recyclerView;
     private ScheduleAdapter scheduleAdapter;
     private ProgressBar progressBar;
@@ -61,6 +64,18 @@ public class ScheduleActivity extends AppCompatActivity {
 
         // Call download function when activity starts
         downloadScheduleJson();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DAILY_SCHEDULE_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null && data.hasExtra("updatedScheduleList")) {
+                String updatedScheduleListJson = data.getStringExtra("updatedScheduleList");
+                List<ScheduleDay> updatedScheduleList = new Gson().fromJson(updatedScheduleListJson, new TypeToken<List<ScheduleDay>>() {}.getType());
+                scheduleAdapter.updateData(updatedScheduleList); // Update the adapter with the new data
+            }
+        }
     }
 
     private void downloadScheduleJson() {

@@ -52,6 +52,17 @@ public class EventDetailActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
+    //TODO: Check if the way this is done is optimal
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String eventJson = getIntent().getStringExtra("updatedEvent");
+        if (eventJson != null) {
+            event = new Gson().fromJson(eventJson, Event.class);
+            populateEventData();
+        }
+    }
+
     private void populateEventData() {
         if (event != null) {
             editTextTime.setText(event.getTime());

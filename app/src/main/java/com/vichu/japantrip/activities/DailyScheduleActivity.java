@@ -69,6 +69,7 @@ public class DailyScheduleActivity extends AppCompatActivity {
                 String updatedEventJson = data.getStringExtra("updatedEvent");
                 Event updatedEvent = new Gson().fromJson(updatedEventJson, Event.class);
                 updateEventInList(updatedEvent);
+                eventAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -99,12 +100,26 @@ public class DailyScheduleActivity extends AppCompatActivity {
         awsS3Helper.uploadScheduleJson(updatedJson, success -> {
             if (success) {
                 Log.d("EventDetailActivity", "Notes saved and uploaded to S3 successfully.");
-                runOnUiThread(() -> Toast.makeText(this, "Changed uploaded successfully", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, "Changes uploaded successfully", Toast.LENGTH_SHORT).show());
+
+                // Return the updated schedule list to ScheduleActivity
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("updatedScheduleList", new Gson().toJson(scheduleList));
+                setResult(RESULT_OK, resultIntent);
             } else {
                 Log.e("EventDetailActivity", "Failed to upload updated schedule.");
                 runOnUiThread(() -> Toast.makeText(this, "Failed to upload changes. Please try again.", Toast.LENGTH_SHORT).show());
             }
         });
+    }
+
+    //TODO: check if onBackPressed is needed if its being handled above
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("updatedScheduleList", new Gson().toJson(scheduleList));
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 
     @Override

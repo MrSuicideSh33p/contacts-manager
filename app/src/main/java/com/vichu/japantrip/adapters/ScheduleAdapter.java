@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.vichu.japantrip.R;
 import com.vichu.japantrip.activities.DailyScheduleActivity;
+import com.vichu.japantrip.activities.ScheduleActivity;
 import com.vichu.japantrip.models.ScheduleDay;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
 
+    private static final int DAILY_SCHEDULE_REQUEST_CODE = 101;
     private final ArrayList<ScheduleDay> scheduleList;
 
     public ScheduleAdapter(List<ScheduleDay> scheduleList) {
@@ -59,7 +61,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             intent.putExtra("events", new Gson().toJson(scheduleDay.getEvents()));
             intent.putExtra("scheduleIndex", new Gson().toJson(scheduleDay.getScheduleIndex()));
             intent.putParcelableArrayListExtra("scheduleList", scheduleList);
-            v.getContext().startActivity(intent);
+            ((ScheduleActivity) v.getContext()).startActivityForResult(intent, DAILY_SCHEDULE_REQUEST_CODE);
         });
     }
 
