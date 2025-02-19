@@ -1,13 +1,10 @@
 package com.vichu.japantrip.activities;
 
-import static com.vichu.japantrip.utils.JsonHelper.parseJsonFile;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +22,7 @@ import com.vichu.japantrip.models.Event;
 import com.vichu.japantrip.models.ScheduleDay;
 import com.vichu.japantrip.utils.AwsS3Helper;
 import com.vichu.japantrip.utils.RecyclerViewHelper;
+import com.vichu.japantrip.utils.ScheduleDownloadHelper;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -96,6 +94,26 @@ public class DailyScheduleActivity extends AppCompatActivity {
         }
     }
 
+    private void downloadScheduleJsonAndRefreshUI() {
+        File localFile = new File(getFilesDir(), "schedule.json");
+        ScheduleDownloadHelper.downloadScheduleJson(this, localFile, awsS3Helper, progressBar, progressText, recyclerView, new ScheduleDownloadHelper.DownloadListener() {
+            @Override
+            public void onDownloadSuccess(List<ScheduleDay> scheduleList) {
+                for (int i = 0; i < scheduleList.size(); i++) {
+                    if (scheduleList.get(i).getScheduleIndex() == scheduleIndex) {
+                        RecyclerViewHelper.updateRecyclerView(eventAdapter, recyclerView, scheduleList.get(i).getEvents());
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onDownloadFailed() {
+                Toast.makeText(DailyScheduleActivity.this, "Failed to download schedule. Please check your internet connection.", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.daily_schedule_menu, menu);
@@ -105,55 +123,10 @@ public class DailyScheduleActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_refresh) {
-            downloadScheduleJson();
+            downloadScheduleJsonAndRefreshUI();
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    //TODO: Check possibility to extract this method from ScheduleActivity and DailyScheduleActivity
-    private void downloadScheduleJson() {
-        File localFile = new File(getFilesDir(), "schedule.json");
-
-        runOnUiThread(() -> {
-            progressBar.setVisibility(View.VISIBLE);
-            progressText.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        });
-
-        awsS3Helper.downloadFile(localFile, new AwsS3Helper.S3DownloadListener() {
-            @Override
-            public void onDownloadSuccess(File file) {
-                scheduleList = parseJsonFile(file);
-
-                if (scheduleList != null) {
-                    for (int i = 0; i < scheduleList.size(); i++) {
-                        if (scheduleList.get(i).getScheduleIndex() == scheduleIndex) {
-                            RecyclerViewHelper.updateRecyclerView(eventAdapter, recyclerView, scheduleList.get(i).getEvents());
-                            break;
-                        }
-                    }
-                } else {
-                    Log.e("DailyScheduleActivity", "Parsed JSON returned null.");
-                    Toast.makeText(DailyScheduleActivity.this, "Failed to parse schedule data.", Toast.LENGTH_LONG).show();
-                }
-
-                runOnUiThread(() -> progressBar.setVisibility(View.GONE));
-                runOnUiThread(() -> progressText.setVisibility(View.GONE));
-                recyclerView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onDownloadFailed() {
-                Log.e("DailyScheduleActivity", "Failed to download schedule.json");
-                runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE);
-                    progressText.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    Toast.makeText(DailyScheduleActivity.this, "Failed to download schedule. Please check your internet connection.", Toast.LENGTH_LONG).show();
-                });
-            }
-        });
     }
 
     private boolean updateEventInList(Event updatedEvent) {

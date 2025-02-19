@@ -1,13 +1,9 @@
 package com.vichu.japantrip.activities;
 
-import static com.vichu.japantrip.utils.JsonHelper.parseJsonFile;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +20,7 @@ import com.vichu.japantrip.adapters.ScheduleAdapter;
 import com.vichu.japantrip.models.ScheduleDay;
 import com.vichu.japantrip.utils.AwsS3Helper;
 import com.vichu.japantrip.utils.RecyclerViewHelper;
+import com.vichu.japantrip.utils.ScheduleDownloadHelper;
 
 import java.io.File;
 import java.util.Collections;
@@ -65,7 +62,7 @@ public class ScheduleActivity extends AppCompatActivity {
         awsS3Helper = new AwsS3Helper(this);
 
         // Call download function when activity starts
-        downloadScheduleJson();
+        downloadScheduleJsonAndRefreshUI();
     }
 
     @Override
@@ -89,48 +86,23 @@ public class ScheduleActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_refresh) {
-            downloadScheduleJson();
+            downloadScheduleJsonAndRefreshUI();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    //TODO: Check possibility to extract this method from ScheduleActivity and DailyScheduleActivity
-    private void downloadScheduleJson() {
+    private void downloadScheduleJsonAndRefreshUI() {
         File localFile = new File(getFilesDir(), "schedule.json");
-
-        runOnUiThread(() -> {
-            progressBar.setVisibility(View.VISIBLE);
-            progressText.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        });
-
-        awsS3Helper.downloadFile(localFile, new AwsS3Helper.S3DownloadListener() {
+        ScheduleDownloadHelper.downloadScheduleJson(this, localFile, awsS3Helper, progressBar, progressText, recyclerView, new ScheduleDownloadHelper.DownloadListener() {
             @Override
-            public void onDownloadSuccess(File file) {
-                scheduleList = parseJsonFile(file);
-
-                if (scheduleList != null) {
-                    RecyclerViewHelper.updateRecyclerView(scheduleAdapter, recyclerView, scheduleList);
-                } else {
-                    Log.e("ScheduleActivity", "Parsed JSON returned null.");
-                    Toast.makeText(ScheduleActivity.this, "Failed to parse schedule data.", Toast.LENGTH_LONG).show();
-                }
-
-                runOnUiThread(() -> progressBar.setVisibility(View.GONE));
-                runOnUiThread(() -> progressText.setVisibility(View.GONE));
-                recyclerView.setVisibility(View.VISIBLE);
+            public void onDownloadSuccess(List<ScheduleDay> scheduleList) {
+                RecyclerViewHelper.updateRecyclerView(scheduleAdapter, recyclerView, scheduleList);
             }
 
             @Override
             public void onDownloadFailed() {
-                Log.e("ScheduleActivity", "Failed to download schedule.json");
-                runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE);
-                    progressText.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    Toast.makeText(ScheduleActivity.this, "Failed to download schedule. Please check your internet connection.", Toast.LENGTH_LONG).show();
-                });
+                Toast.makeText(ScheduleActivity.this, "Failed to download schedule. Please check your internet connection.", Toast.LENGTH_LONG).show();
             }
         });
     }
