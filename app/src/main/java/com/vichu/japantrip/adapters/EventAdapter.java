@@ -15,6 +15,7 @@ import com.vichu.japantrip.R;
 import com.vichu.japantrip.activities.DailyScheduleActivity;
 import com.vichu.japantrip.activities.EventDetailActivity;
 import com.vichu.japantrip.models.Event;
+import com.vichu.japantrip.models.ScheduleDay;
 
 import java.util.List;
 
@@ -35,6 +36,16 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     public EventAdapter(List<Event> events) {
         this.events = events;
+    }
+
+    public void updateData(List<Event> newEvents) {
+        if (newEvents == null) {
+            this.events.clear();
+        } else {
+            this.events.clear();
+            this.events.addAll(newEvents);
+        }
+        notifyDataSetChanged();
     }
 
     @NonNull
