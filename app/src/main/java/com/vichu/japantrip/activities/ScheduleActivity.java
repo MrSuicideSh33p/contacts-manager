@@ -3,6 +3,8 @@ package com.vichu.japantrip.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,6 +41,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView progressText;
     private AwsS3Helper awsS3Helper;
+    private List<ScheduleDay> scheduleList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,16 +84,35 @@ public class ScheduleActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.schedule_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_refresh) {
+            downloadScheduleJson();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //TODO: Check possibility to extract this method from ScheduleActivity and DailyScheduleActivity
     private void downloadScheduleJson() {
         File localFile = new File(getFilesDir(), "schedule.json");
 
-        progressBar.setVisibility(View.VISIBLE);
-        progressText.setVisibility(View.VISIBLE);
+        runOnUiThread(() -> {
+            progressBar.setVisibility(View.VISIBLE);
+            progressText.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        });
 
         awsS3Helper.downloadFile(localFile, new AwsS3Helper.S3DownloadListener() {
             @Override
             public void onDownloadSuccess(File file) {
-                List<ScheduleDay> scheduleList = parseJsonFile(file);
+                scheduleList = parseJsonFile(file);
 
                 if (scheduleList != null) {
                     updateRecyclerView(scheduleList);
@@ -101,6 +123,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> progressBar.setVisibility(View.GONE));
                 runOnUiThread(() -> progressText.setVisibility(View.GONE));
+                recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -109,16 +132,19 @@ public class ScheduleActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
                     progressText.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                     showError("Failed to download schedule. Please check your internet connection.");
                 });
             }
         });
     }
 
+    //TODO: Check possibility to extract this method from ScheduleActivity and DailyScheduleActivity
     private void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
+    //TODO: Check possibility to extract this method from ScheduleActivity and DailyScheduleActivity
     private List<ScheduleDay> parseJsonFile(File file) {
         try {
             // Read the contents of the JSON file
