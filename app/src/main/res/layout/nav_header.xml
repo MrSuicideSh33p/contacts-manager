@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp"
-    android:background="@color/colorPrimary">
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/sakura_logo"
@@ -20,6 +20,6 @@
         android:text="@string/conference_info"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/colorPrimary" />
 
 </LinearLayout>

@@ -20,36 +20,36 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
             android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <!-- Top Section (30%) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
             android:orientation="vertical"
             android:paddingStart="16dp"
-            android:paddingBottom="0dp"
-            android:layout_marginBottom="0dp">
+            android:paddingBottom="0dp">
 
             <TextView
                 android:id="@+id/titleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="2dp"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:paddingBottom="2dp"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/welcomeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black"
-                android:text="@string/welcome_text"
+                android:layout_marginBottom="0dp"
                 android:ellipsize="end"
                 android:paddingBottom="0dp"
-                android:layout_marginBottom="0dp"/>
+                android:text="@string/welcome_text"
+                android:textColor="@color/colorPrimary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <!-- Middle Section (60%) -->
@@ -63,186 +63,164 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
                 android:layout_margin="1dp"
-                android:layout_marginBottom="1dp">
+                android:layout_marginBottom="1dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
-
-                <!-- Background Image -->
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/quick_actions_bg"/>
-
-                <!-- Overlay for Dark Effect -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#66000000"/> <!-- Dark overlay for better contrast -->
-
-                <!-- Quick Actions Title -->
-                <TextView
-                    android:id="@+id/quickActionsTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Quick Actions"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="16dp"/>
-
-                <!-- Action Buttons Container -->
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:layout_below="@id/quickActionsTitle"
-                    android:gravity="center_horizontal">
+                    android:padding="16dp">
 
-                    <!-- Add Contact Button -->
+                    <!-- Background Image -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/quick_actions_bg" />
+
+                    <!-- Overlay for Dark Effect -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#66000000" /> <!-- Dark overlay for better contrast -->
+
+                    <!-- Quick Actions Title -->
+                    <TextView
+                        android:id="@+id/quickActionsTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="16dp"
+                        android:text="Quick Actions"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <!-- Action Buttons Container -->
                     <LinearLayout
-                        android:id="@+id/add_contact_section"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="12dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true">
+                        android:layout_below="@id/quickActionsTitle"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_add_contact"
-                            android:layout_marginEnd="12dp"
-                            app:tint="@android:color/white"/>
-
-                        <TextView
-                            android:id="@+id/btn_add_contact"
-                            android:layout_width="wrap_content"
+                        <!-- Add Contact Button -->
+                        <LinearLayout
+                            android:id="@+id/add_contact_section"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Add Connection"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/white"/>
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="12dp"
+                                android:src="@drawable/ic_add_contact"
+                                app:tint="@android:color/white" />
+
+                            <TextView
+                                android:id="@+id/btn_add_contact"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Add Connection"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <!-- View Contacts Button -->
+                        <LinearLayout
+                            android:id="@+id/view_contacts_section"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="12dp"
+                                android:src="@drawable/ic_view_contacts"
+                                app:tint="@android:color/white" />
+
+                            <TextView
+                                android:id="@+id/btn_view_contacts"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="View Connections"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <!-- Schedule Button -->
+                        <LinearLayout
+                            android:id="@+id/schedule_section"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="12dp"
+                                android:src="@drawable/ic_schedule"
+                                app:tint="@android:color/white" />
+
+                            <TextView
+                                android:id="@+id/btn_schedule"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Conference Schedule"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <!-- Contact Us Button -->
+                        <LinearLayout
+                            android:id="@+id/contact_us_section"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginEnd="12dp"
+                                android:src="@drawable/ic_contact_us"
+                                app:tint="@android:color/white" />
+
+                            <TextView
+                                android:id="@+id/btn_contact_us"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Contact Developer"
+                                android:textColor="@android:color/white"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
                     </LinearLayout>
 
-                    <!-- View Contacts Button -->
-                    <LinearLayout
-                        android:id="@+id/view_contacts_section"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="12dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true">
+                </RelativeLayout>
 
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_view_contacts"
-                            android:layout_marginEnd="12dp"
-                            app:tint="@android:color/white"/>
+            </androidx.cardview.widget.CardView>
 
-                        <TextView
-                            android:id="@+id/btn_view_contacts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="View Connections"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/white"/>
-                    </LinearLayout>
-
-                    <!-- Schedule Button -->
-                    <LinearLayout
-                        android:id="@+id/schedule_section"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="12dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_schedule"
-                            android:layout_marginEnd="12dp"
-                            app:tint="@android:color/white"/>
-
-                        <TextView
-                            android:id="@+id/btn_schedule"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Conference Schedule"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/white"/>
-                    </LinearLayout>
-
-                    <!-- Contact Us Button -->
-                    <LinearLayout
-                        android:id="@+id/contact_us_section"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="12dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:clickable="true">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_contact_us"
-                            android:layout_marginEnd="12dp"
-                            app:tint="@android:color/white"/>
-
-                        <TextView
-                            android:id="@+id/btn_contact_us"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Contact Developer"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/white"/>
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </RelativeLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
-
-        <!-- Bottom Section (10%) - Placeholder -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:background="@color/colorPrimary">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Baka Corp "
-                android:textSize="16sp"
-                android:textColor="@android:color/white"/>
-
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/ic_corp"
-                android:layout_marginEnd="8dp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -252,8 +230,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:elevation="8dp"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/drawer_menu"
-        android:elevation="8dp"/>
+        app:menu="@menu/drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
