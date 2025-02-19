@@ -57,6 +57,11 @@ public class DailyScheduleActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerViewEvents);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         eventAdapter = new EventAdapter(events);
+        eventAdapter.setOnEventToggleListener(updatedEvent -> {
+            if (updateEventInList(updatedEvent)) {
+                uploadUpdatedSchedule();
+            }
+        });
         recyclerView.setAdapter(eventAdapter);
     }
 
@@ -68,28 +73,32 @@ public class DailyScheduleActivity extends AppCompatActivity {
             if (data != null && data.hasExtra("updatedEvent")) {
                 String updatedEventJson = data.getStringExtra("updatedEvent");
                 Event updatedEvent = new Gson().fromJson(updatedEventJson, Event.class);
-                updateEventInList(updatedEvent);
-                eventAdapter.notifyDataSetChanged();
+                if (updateEventInList(updatedEvent)) {
+                    uploadUpdatedSchedule();
+                }
             }
         }
     }
 
-    private void updateEventInList(Event updatedEvent) {
+    private boolean updateEventInList(Event updatedEvent) {
+        boolean isUpdated = false;
         for (int i = 0; i < events.size(); i++) {
             if (events.get(i).getIndex() == updatedEvent.getIndex()) {
                 events.set(i, updatedEvent);
-                Log.w("DailyScheduleActivity", "updated event notes is " + updatedEvent.getNotes());
+                Log.w("DailyScheduleActivity", "Updated event notes: " + updatedEvent.getNotes());
 
-                for (i = 0; i < scheduleList.size(); i++) {
-                    if (scheduleList.get(i).getScheduleIndex() == scheduleIndex) {
-                        scheduleList.get(i).setEvents(events);
-                        Log.w("DailyScheduleActivity", "updated schedule title is " + scheduleList.get(i).getTitle());
+                for (int j = 0; j < scheduleList.size(); j++) {
+                    if (scheduleList.get(j).getScheduleIndex() == scheduleIndex) {
+                        scheduleList.get(j).setEvents(events);
+                        Log.w("DailyScheduleActivity", "Updated schedule title: " + scheduleList.get(j).getTitle());
+                        isUpdated = true;
                     }
                 }
-                uploadUpdatedSchedule();
                 eventAdapter.notifyItemChanged(i);
+                break;
             }
         }
+        return isUpdated;
     }
 
     private void uploadUpdatedSchedule() {
@@ -99,15 +108,15 @@ public class DailyScheduleActivity extends AppCompatActivity {
         AwsS3Helper awsS3Helper = new AwsS3Helper(this);
         awsS3Helper.uploadScheduleJson(updatedJson, success -> {
             if (success) {
-                Log.d("EventDetailActivity", "Notes saved and uploaded to S3 successfully.");
+                Log.d("DailyScheduleActivity", "Changes uploaded to S3 successfully.");
                 runOnUiThread(() -> Toast.makeText(this, "Changes uploaded successfully", Toast.LENGTH_SHORT).show());
 
                 // Return the updated schedule list to ScheduleActivity
                 Intent resultIntent = new Intent();
-                resultIntent.putExtra("updatedScheduleList", new Gson().toJson(scheduleList));
+                resultIntent.putExtra("updatedScheduleList", updatedJson);
                 setResult(RESULT_OK, resultIntent);
             } else {
-                Log.e("EventDetailActivity", "Failed to upload updated schedule.");
+                Log.e("DailyScheduleActivity", "Failed to upload updated schedule.");
                 runOnUiThread(() -> Toast.makeText(this, "Failed to upload changes. Please try again.", Toast.LENGTH_SHORT).show());
             }
         });
