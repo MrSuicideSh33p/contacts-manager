@@ -24,6 +24,7 @@ import com.vichu.japantrip.adapters.EventAdapter;
 import com.vichu.japantrip.models.Event;
 import com.vichu.japantrip.models.ScheduleDay;
 import com.vichu.japantrip.utils.AwsS3Helper;
+import com.vichu.japantrip.utils.RecyclerViewHelper;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -128,7 +129,7 @@ public class DailyScheduleActivity extends AppCompatActivity {
                 if (scheduleList != null) {
                     for (int i = 0; i < scheduleList.size(); i++) {
                         if (scheduleList.get(i).getScheduleIndex() == scheduleIndex) {
-                            updateRecyclerView(scheduleList.get(i).getEvents());
+                            RecyclerViewHelper.updateRecyclerView(eventAdapter, recyclerView, scheduleList.get(i).getEvents());
                             break;
                         }
                     }
@@ -155,17 +156,6 @@ public class DailyScheduleActivity extends AppCompatActivity {
         });
     }
 
-    private void updateRecyclerView(List<Event> events) {
-        runOnUiThread(() -> {
-            if (eventAdapter != null) {
-                eventAdapter.updateData(events);
-            } else {
-                eventAdapter = new EventAdapter(events);
-                recyclerView.setAdapter(eventAdapter);
-            }
-        });
-    }
-
     private boolean updateEventInList(Event updatedEvent) {
         boolean isUpdated = false;
         for (int i = 0; i < events.size(); i++) {
@@ -188,27 +178,25 @@ public class DailyScheduleActivity extends AppCompatActivity {
     }
 
     private void uploadUpdatedSchedule() {
-        Gson gson = new Gson();
-        String updatedJson = gson.toJson(scheduleList);
-
-        AwsS3Helper awsS3Helper = new AwsS3Helper(this);
-        awsS3Helper.uploadScheduleJson(updatedJson, success -> {
-            if (success) {
-                Log.d("DailyScheduleActivity", "Changes uploaded to S3 successfully.");
-                runOnUiThread(() -> Toast.makeText(this, "Changes uploaded successfully", Toast.LENGTH_SHORT).show());
-
-                // Return the updated schedule list to ScheduleActivity
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("updatedScheduleList", updatedJson);
-                setResult(RESULT_OK, resultIntent);
-            } else {
-                Log.e("DailyScheduleActivity", "Failed to upload updated schedule.");
-                runOnUiThread(() -> Toast.makeText(this, "Failed to upload changes. Please try again.", Toast.LENGTH_SHORT).show());
-            }
-        });
+        String updatedJson = new Gson().toJson(scheduleList);
+        awsS3Helper.uploadScheduleJson(updatedJson, this::handleUploadResult);
     }
 
-    //TODO: check if onBackPressed is needed if its being handled above
+    private void handleUploadResult(boolean success) {
+        if (success) {
+            Log.d("DailyScheduleActivity", "Changes uploaded to S3 successfully.");
+            runOnUiThread(() -> Toast.makeText(this, "Changes uploaded successfully", Toast.LENGTH_SHORT).show());
+
+            // Return the updated schedule list to ScheduleActivity
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("updatedScheduleList", new Gson().toJson(scheduleList));
+            setResult(RESULT_OK, resultIntent);
+        } else {
+            Log.e("DailyScheduleActivity", "Failed to upload updated schedule.");
+            runOnUiThread(() -> Toast.makeText(this, "Failed to upload changes. Please try again.", Toast.LENGTH_SHORT).show());
+        }
+    }
+
     @Override
     public void onBackPressed() {
         Intent resultIntent = new Intent();

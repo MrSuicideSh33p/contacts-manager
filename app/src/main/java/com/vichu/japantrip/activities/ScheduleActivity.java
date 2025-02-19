@@ -23,6 +23,7 @@ import com.vichu.japantrip.R;
 import com.vichu.japantrip.adapters.ScheduleAdapter;
 import com.vichu.japantrip.models.ScheduleDay;
 import com.vichu.japantrip.utils.AwsS3Helper;
+import com.vichu.japantrip.utils.RecyclerViewHelper;
 
 import java.io.File;
 import java.util.Collections;
@@ -110,7 +111,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 scheduleList = parseJsonFile(file);
 
                 if (scheduleList != null) {
-                    updateRecyclerView(scheduleList);
+                    RecyclerViewHelper.updateRecyclerView(scheduleAdapter, recyclerView, scheduleList);
                 } else {
                     Log.e("ScheduleActivity", "Parsed JSON returned null.");
                     Toast.makeText(ScheduleActivity.this, "Failed to parse schedule data.", Toast.LENGTH_LONG).show();
@@ -130,17 +131,6 @@ public class ScheduleActivity extends AppCompatActivity {
                     recyclerView.setVisibility(View.VISIBLE);
                     Toast.makeText(ScheduleActivity.this, "Failed to download schedule. Please check your internet connection.", Toast.LENGTH_LONG).show();
                 });
-            }
-        });
-    }
-
-    private void updateRecyclerView(List<ScheduleDay> scheduleList) {
-        runOnUiThread(() -> {
-            if (scheduleAdapter != null) {
-                scheduleAdapter.updateData(scheduleList);
-            } else {
-                scheduleAdapter = new ScheduleAdapter(scheduleList);
-                recyclerView.setAdapter(scheduleAdapter);
             }
         });
     }
