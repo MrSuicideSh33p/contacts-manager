@@ -105,7 +105,7 @@ public class AwsS3Helper {
                         String key = it.next();
                         metadataMap.put(key, metadataJson.getString(key));
                     }
-                    Log.d(TAG, "Metadata loaded successfully: " + metadataMap.size() + " contacts.");
+                    Log.d(TAG, "Metadata loaded successfully: " + metadataMap.size() + " connections.");
                 } catch (AmazonS3Exception e) {
                     Log.e(TAG, "metadata.json not found. Proceeding without it.");
                 } catch (JSONException e) {
@@ -134,10 +134,10 @@ public class AwsS3Helper {
                     }
                 }
 
-                Log.d(TAG, "Fetched " + files.size() + " contacts from S3.");
+                Log.d(TAG, "Fetched " + files.size() + " connections from S3.");
                 listener.onSuccess(names, files);
             } catch (Exception e) {
-                Log.e(TAG, "Error fetching contacts: " + e.getMessage());
+                Log.e(TAG, "Error fetching connections: " + e.getMessage());
                 listener.onError(e.getMessage());
             }
         }).start();

@@ -4,22 +4,22 @@
         <item
             android:id="@+id/nav_add_contact"
             android:icon="@drawable/ic_add_contact"
-            android:title="Add Contact" />
+            android:title="Add Connections" />
 
         <item
             android:id="@+id/nav_view_contacts"
             android:icon="@drawable/ic_view_contacts"
-            android:title="View Contacts" />
+            android:title="View Connections" />
 
         <item
             android:id="@+id/nav_schedule"
             android:icon="@drawable/ic_schedule"
-            android:title="Schedule" />
+            android:title="Conference Schedule" />
 
         <item
             android:id="@+id/nav_contact_us"
             android:icon="@drawable/ic_contact_us"
-            android:title="Contact Us" />
+            android:title="Contact Developer" />
     </group>
 
 </menu>

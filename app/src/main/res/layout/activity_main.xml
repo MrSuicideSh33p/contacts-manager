@@ -129,7 +129,7 @@
                             android:id="@+id/btn_add_contact"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Add Contact"
+                            android:text="Add Connection"
                             android:textSize="16sp"
                             android:textColor="@android:color/white"/>
                     </LinearLayout>
@@ -156,7 +156,7 @@
                             android:id="@+id/btn_view_contacts"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="View Contacts"
+                            android:text="View Connections"
                             android:textSize="16sp"
                             android:textColor="@android:color/white"/>
                     </LinearLayout>
@@ -183,7 +183,7 @@
                             android:id="@+id/btn_schedule"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Schedule"
+                            android:text="Conference Schedule"
                             android:textSize="16sp"
                             android:textColor="@android:color/white"/>
                     </LinearLayout>
@@ -210,7 +210,7 @@
                             android:id="@+id/btn_contact_us"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Contact Us"
+                            android:text="Contact Developer"
                             android:textSize="16sp"
                             android:textColor="@android:color/white"/>
                     </LinearLayout>

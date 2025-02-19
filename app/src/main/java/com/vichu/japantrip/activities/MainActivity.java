@@ -54,13 +54,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        // Find views for the 4 sections inside the middle part
         LinearLayout addContactSection = findViewById(R.id.add_contact_section);
         LinearLayout viewContactsSection = findViewById(R.id.view_contacts_section);
         LinearLayout scheduleSection = findViewById(R.id.schedule_section);
         LinearLayout contactUsSection = findViewById(R.id.contact_us_section);
 
-        // Set click listeners
         addContactSection.setOnClickListener(v -> openAddContactScreen());
         viewContactsSection.setOnClickListener(v -> openContactListScreen());
         scheduleSection.setOnClickListener(v -> openScheduleScreen());

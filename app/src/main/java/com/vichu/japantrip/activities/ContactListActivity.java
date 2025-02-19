@@ -164,7 +164,7 @@ public class ContactListActivity extends AppCompatActivity {
             @Override
             public void onError(String error) {
                 runOnUiThread(() -> {
-                    Toast.makeText(ContactListActivity.this, "Error fetching contacts: " + error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ContactListActivity.this, "Error fetching connections: " + error, Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                     progressText.setVisibility(View.GONE);
                 });

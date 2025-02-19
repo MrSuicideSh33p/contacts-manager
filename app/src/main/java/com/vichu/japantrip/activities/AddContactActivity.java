@@ -119,13 +119,13 @@ public class AddContactActivity extends AppCompatActivity {
         awsS3Helper.uploadContact(fileName, contactContent, success -> {
             runOnUiThread(() -> {
                 if (success) {
-                    Toast.makeText(this, "Contact successfully saved!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Connection successfully saved!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(this, "Failed to save contact!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to save connection!", Toast.LENGTH_SHORT).show();
                 }
             });
         });

@@ -45,7 +45,6 @@ public class ScheduleDownloadHelper {
             }
         });
 
-
         awsS3Helper.downloadFile(localFile, new AwsS3Helper.S3DownloadListener() {
             @Override
             public void onDownloadSuccess(File file) {

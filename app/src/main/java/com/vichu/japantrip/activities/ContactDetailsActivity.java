@@ -112,8 +112,8 @@ public class ContactDetailsActivity extends AppCompatActivity {
 
     private void confirmDelete() {
         new AlertDialog.Builder(this)
-                .setTitle("Delete Contact")
-                .setMessage("Are you sure you want to delete this contact?")
+                .setTitle("Delete Connection")
+                .setMessage("Are you sure you want to delete this connection?")
                 .setPositiveButton("Delete", (dialog, which) -> deleteContact())
                 .setNegativeButton("Cancel", null)
                 .show();
@@ -123,7 +123,7 @@ public class ContactDetailsActivity extends AppCompatActivity {
         awsS3Helper.deleteContact(contactFile, success -> {
             if (success) {
                 runOnUiThread(() -> {
-                    Toast.makeText(this, "Contact deleted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Connection deleted", Toast.LENGTH_SHORT).show();
                     setResult(RESULT_OK);
                     finish();
                 });
@@ -151,7 +151,7 @@ public class ContactDetailsActivity extends AppCompatActivity {
         awsS3Helper.uploadContact(contactFile, updatedFileContent, (success) -> {
             runOnUiThread(() -> {
                 if (success) {
-                    Toast.makeText(this, "Contact updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Connection updated", Toast.LENGTH_SHORT).show();
                     setEditingEnabled(false);
 
                     // Redirect back to ContactListActivity
