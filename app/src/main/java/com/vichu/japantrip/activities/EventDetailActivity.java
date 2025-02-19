@@ -80,6 +80,14 @@ public class EventDetailActivity extends AppCompatActivity {
 
     private void setEditingEnabled(boolean enabled) {
         editTextNotes.setEnabled(enabled);
+
+        int greyColor = getResources().getColor(R.color.gray, getTheme());
+        int blackColor = getResources().getColor(R.color.black, getTheme());
+
+        editTextTime.setTextColor(enabled ? greyColor : blackColor);
+        editTextSpeaker.setTextColor(enabled ? greyColor : blackColor);
+        editTextUniversity.setTextColor(enabled ? greyColor : blackColor);
+        editTextTopic.setTextColor(enabled ? greyColor : blackColor);
     }
 
     @Override

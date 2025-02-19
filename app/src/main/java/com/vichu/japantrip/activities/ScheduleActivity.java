@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,6 +37,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ScheduleAdapter scheduleAdapter;
     private ProgressBar progressBar;
+    private TextView progressText;
     private AwsS3Helper awsS3Helper;
 
     @Override
@@ -59,6 +61,7 @@ public class ScheduleActivity extends AppCompatActivity {
         scheduleAdapter = new ScheduleAdapter(Collections.emptyList());
         recyclerView.setAdapter(scheduleAdapter); // Set adapter immediately
 
+        progressText = findViewById(R.id.progressText);
         progressBar = findViewById(R.id.progressBar);
         awsS3Helper = new AwsS3Helper(this);
 
@@ -81,7 +84,8 @@ public class ScheduleActivity extends AppCompatActivity {
     private void downloadScheduleJson() {
         File localFile = new File(getFilesDir(), "schedule.json");
 
-        progressBar.setVisibility(View.VISIBLE); // Show loading indicator
+        progressBar.setVisibility(View.VISIBLE);
+        progressText.setVisibility(View.VISIBLE);
 
         awsS3Helper.downloadFile(localFile, new AwsS3Helper.S3DownloadListener() {
             @Override
@@ -95,14 +99,16 @@ public class ScheduleActivity extends AppCompatActivity {
                     showError("Failed to parse schedule data.");
                 }
 
-                runOnUiThread(() -> progressBar.setVisibility(View.GONE)); // Hide ProgressBar
+                runOnUiThread(() -> progressBar.setVisibility(View.GONE));
+                runOnUiThread(() -> progressText.setVisibility(View.GONE));
             }
 
             @Override
             public void onDownloadFailed() {
                 Log.e("ScheduleActivity", "Failed to download schedule.json");
                 runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE); // Hide ProgressBar
+                    progressBar.setVisibility(View.GONE);
+                    progressText.setVisibility(View.GONE);
                     showError("Failed to download schedule. Please check your internet connection.");
                 });
             }
