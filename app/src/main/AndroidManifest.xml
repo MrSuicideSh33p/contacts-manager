@@ -23,14 +23,16 @@ package="com.vichu.japantrip">
             </intent-filter>
         </activity>
         <activity android:name="com.vichu.japantrip.activities.MainActivity"/>
+        <activity android:name="com.vichu.japantrip.activities.PosterActivity"/>
         <activity android:name="com.vichu.japantrip.activities.ScheduleActivity"/>
         <activity android:name="com.vichu.japantrip.activities.ContactUsActivity"/>
+        <activity android:name="com.vichu.japantrip.activities.PosterInfoActivity"/>
         <activity android:name="com.vichu.japantrip.activities.AddContactActivity"/>
         <activity android:name="com.vichu.japantrip.activities.ContactListActivity"/>
         <activity android:name="com.vichu.japantrip.activities.EventDetailActivity"/>
+        <activity android:name="com.vichu.japantrip.activities.PosterDetailActivity"/>
         <activity android:name="com.vichu.japantrip.activities.DailyScheduleActivity"/>
         <activity android:name="com.vichu.japantrip.activities.ContactDetailsActivity"/>
     </application>
 
 </manifest>
-

@@ -17,6 +17,11 @@
             android:title="Conference Schedule" />
 
         <item
+            android:id="@+id/nav_poster_schedule"
+            android:icon="@drawable/ic_poster_schedule"
+            android:title="Poster Schedule"/>
+
+        <item
             android:id="@+id/nav_contact_us"
             android:icon="@drawable/ic_contact_us"
             android:title="Contact Developer" />

@@ -204,11 +204,9 @@ public class AwsS3Helper {
         }).start();
     }
 
-    public void uploadScheduleJson(String jsonContent, UploadListener listener) {
+    public void uploadUpdatedJson(String filePath, String jsonContent, UploadListener listener) {
         new Thread(() -> {
             try {
-                String filePath = "schedule/schedule.json";  // S3 path
-
                 // Convert JSON content to InputStream
                 byte[] jsonBytes = jsonContent.getBytes(StandardCharsets.UTF_8);
                 InputStream inputStream = new ByteArrayInputStream(jsonBytes);
@@ -289,10 +287,10 @@ public class AwsS3Helper {
         }).start();
     }
 
-    public void downloadFile(File localFile, S3DownloadListener listener) {
+    public void downloadFile(String file, File localFile, S3DownloadListener listener) {
         TransferObserver transferObserver = transferUtility.download(
                 "the-japan-trip-bucket",
-                "schedule/schedule.json",
+                file,
                 localFile // Where to save the file locally
         );
 

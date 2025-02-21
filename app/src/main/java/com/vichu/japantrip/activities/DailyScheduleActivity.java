@@ -31,6 +31,7 @@ import java.util.List;
 public class DailyScheduleActivity extends AppCompatActivity {
 
     private static final int EVENT_DETAILS_REQUEST_CODE = 100;
+    private final String file = "schedule/schedule.json";
     private int scheduleIndex;
     private List<Event> events;
     private EventAdapter eventAdapter;
@@ -139,7 +140,7 @@ public class DailyScheduleActivity extends AppCompatActivity {
                 for (int j = 0; j < scheduleList.size(); j++) {
                     if (scheduleList.get(j).getScheduleIndex() == scheduleIndex) {
                         scheduleList.get(j).setEvents(events);
-                        Log.w("DailyScheduleActivity", "Updated schedule title: " + scheduleList.get(j).getTitle());
+                        Log.w("DailyScheduleActivity", "Updated schedule titled: " + scheduleList.get(j).getTitle());
                         isUpdated = true;
                     }
                 }
@@ -152,7 +153,7 @@ public class DailyScheduleActivity extends AppCompatActivity {
 
     private void uploadUpdatedSchedule() {
         String updatedJson = new Gson().toJson(scheduleList);
-        awsS3Helper.uploadScheduleJson(updatedJson, this::handleUploadResult);
+        awsS3Helper.uploadUpdatedJson(file, updatedJson, this::handleUploadResult);
     }
 
     private void handleUploadResult(boolean success) {

@@ -16,21 +16,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.vichu.japantrip.R;
-import com.vichu.japantrip.adapters.ScheduleAdapter;
-import com.vichu.japantrip.models.ScheduleDay;
+import com.vichu.japantrip.adapters.PosterAdapter;
+import com.vichu.japantrip.models.Poster;
 import com.vichu.japantrip.utils.AwsS3Helper;
 import com.vichu.japantrip.utils.RecyclerViewHelper;
-import com.vichu.japantrip.utils.ScheduleDownloadHelper;
+import com.vichu.japantrip.utils.PosterDownloadHelper;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-public class ScheduleActivity extends AppCompatActivity {
+public class PosterActivity extends AppCompatActivity {
 
-    private static final int DAILY_SCHEDULE_REQUEST_CODE = 101;
+    private static final int POSTER_INFO_REQUEST_CODE = 102;
     private RecyclerView recyclerView;
-    private ScheduleAdapter scheduleAdapter;
+    private PosterAdapter posterAdapter;
     private ProgressBar progressBar;
     private TextView progressText;
     private AwsS3Helper awsS3Helper;
@@ -38,7 +38,7 @@ public class ScheduleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_schedule);
+        setContentView(R.layout.activity_poster);
 
         // Toolbar setup
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -49,59 +49,59 @@ public class ScheduleActivity extends AppCompatActivity {
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        recyclerView = findViewById(R.id.recyclerViewSchedule);
+        recyclerView = findViewById(R.id.recyclerViewPoster);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize the adapter with an empty list
-        scheduleAdapter = new ScheduleAdapter(Collections.emptyList());
-        recyclerView.setAdapter(scheduleAdapter); // Set adapter immediately
+        posterAdapter = new PosterAdapter(Collections.emptyList());
+        recyclerView.setAdapter(posterAdapter); // Set adapter immediately
 
         progressText = findViewById(R.id.progressText);
         progressBar = findViewById(R.id.progressBar);
         awsS3Helper = new AwsS3Helper(this);
 
         // Call download function when activity starts
-        downloadScheduleJsonAndRefreshUI();
+        downloadPosterJsonAndRefreshUI();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == DAILY_SCHEDULE_REQUEST_CODE && resultCode == RESULT_OK) {
-            if (data != null && data.hasExtra("updatedScheduleList")) {
-                String updatedScheduleListJson = data.getStringExtra("updatedScheduleList");
-                List<ScheduleDay> updatedScheduleList = new Gson().fromJson(updatedScheduleListJson, new TypeToken<List<ScheduleDay>>() {}.getType());
-                scheduleAdapter.updateData(updatedScheduleList); // Update the adapter with the new data
+        if (requestCode == POSTER_INFO_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null && data.hasExtra("updatedPosterList")) {
+                String updatedPosterListJson = data.getStringExtra("updatedPosterList");
+                List<Poster> updatedPosterList = new Gson().fromJson(updatedPosterListJson, new TypeToken<List<Poster>>() {}.getType());
+                posterAdapter.updateData(updatedPosterList); // Update the adapter with the new data
             }
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.schedule_menu, menu);
+        getMenuInflater().inflate(R.menu.poster_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_refresh) {
-            downloadScheduleJsonAndRefreshUI();
+            downloadPosterJsonAndRefreshUI();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void downloadScheduleJsonAndRefreshUI() {
-        File localFile = new File(getFilesDir(), "schedule.json");
-        ScheduleDownloadHelper.downloadScheduleJson(this, localFile, awsS3Helper, progressBar, progressText, recyclerView, new ScheduleDownloadHelper.DownloadListener() {
+    private void downloadPosterJsonAndRefreshUI() {
+        File localFile = new File(getFilesDir(), "poster.json");
+        PosterDownloadHelper.downloadPosterJson(this, localFile, awsS3Helper, progressBar, progressText, recyclerView, new PosterDownloadHelper.DownloadListener() {
             @Override
-            public void onDownloadSuccess(List<ScheduleDay> scheduleList) {
-                RecyclerViewHelper.updateRecyclerView(scheduleAdapter, recyclerView, scheduleList);
+            public void onDownloadSuccess(List<Poster> posterList) {
+                RecyclerViewHelper.updateRecyclerView(posterAdapter, recyclerView, posterList);
             }
 
             @Override
             public void onDownloadFailed() {
-                Toast.makeText(ScheduleActivity.this, "Failed to download schedule. Please check your internet connection.", Toast.LENGTH_LONG).show();
+                Toast.makeText(PosterActivity.this, "Failed to download poster info. Please check your internet connection.", Toast.LENGTH_LONG).show();
             }
         });
     }

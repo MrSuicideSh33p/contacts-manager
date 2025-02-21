@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
                 openContactListScreen();
             } else if (item.getItemId() == R.id.nav_schedule) {
                     openScheduleScreen();
+            } else if (item.getItemId() == R.id.nav_poster_schedule) {
+                openPosterScheduleScreen();
             } else if (item.getItemId() == R.id.nav_contact_us) {
                 openContactUsScreen();
             }
@@ -57,11 +59,13 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout addContactSection = findViewById(R.id.add_contact_section);
         LinearLayout viewContactsSection = findViewById(R.id.view_contacts_section);
         LinearLayout scheduleSection = findViewById(R.id.schedule_section);
+        LinearLayout posterSection = findViewById(R.id.poster_schedule_section);
         LinearLayout contactUsSection = findViewById(R.id.contact_us_section);
 
         addContactSection.setOnClickListener(v -> openAddContactScreen());
         viewContactsSection.setOnClickListener(v -> openContactListScreen());
         scheduleSection.setOnClickListener(v -> openScheduleScreen());
+        posterSection.setOnClickListener(v -> openPosterScheduleScreen());
         contactUsSection.setOnClickListener(v -> openContactUsScreen());
     }
 
@@ -88,6 +92,12 @@ public class MainActivity extends AppCompatActivity {
     // Open Schedule Screen
     private void openScheduleScreen() {
         Intent intent = new Intent(this, ScheduleActivity.class);
+        startActivity(intent);
+    }
+
+    // Open Poster Schedule Screen
+    private void openPosterScheduleScreen() {
+        Intent intent = new Intent(this, PosterActivity.class);
         startActivity(intent);
     }
 
