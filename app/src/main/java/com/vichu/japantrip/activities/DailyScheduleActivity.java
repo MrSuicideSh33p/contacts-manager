@@ -21,11 +21,12 @@ import com.vichu.japantrip.adapters.EventAdapter;
 import com.vichu.japantrip.models.Event;
 import com.vichu.japantrip.models.ScheduleDay;
 import com.vichu.japantrip.utils.AwsS3Helper;
+import com.vichu.japantrip.utils.DownloadHelper;
 import com.vichu.japantrip.utils.RecyclerViewHelper;
-import com.vichu.japantrip.utils.ScheduleDownloadHelper;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.Comparator;
 import java.util.List;
 
 public class DailyScheduleActivity extends AppCompatActivity {
@@ -97,7 +98,7 @@ public class DailyScheduleActivity extends AppCompatActivity {
 
     private void downloadScheduleJsonAndRefreshUI() {
         File localFile = new File(getFilesDir(), "schedule.json");
-        ScheduleDownloadHelper.downloadScheduleJson(this, localFile, awsS3Helper, progressBar, progressText, recyclerView, new ScheduleDownloadHelper.DownloadListener() {
+        DownloadHelper.downloadJson(this, localFile, awsS3Helper, progressBar, progressText, recyclerView, new DownloadHelper.DownloadListener<ScheduleDay>() {
             @Override
             public void onDownloadSuccess(List<ScheduleDay> scheduleList) {
                 for (int i = 0; i < scheduleList.size(); i++) {
@@ -112,7 +113,7 @@ public class DailyScheduleActivity extends AppCompatActivity {
             public void onDownloadFailed() {
                 Toast.makeText(DailyScheduleActivity.this, "Failed to download schedule. Please check your internet connection.", Toast.LENGTH_LONG).show();
             }
-        });
+        }, file, new TypeToken<List<ScheduleDay>>() {}.getType(), Comparator.comparingInt(ScheduleDay::getScheduleIndex));
     }
 
     @Override

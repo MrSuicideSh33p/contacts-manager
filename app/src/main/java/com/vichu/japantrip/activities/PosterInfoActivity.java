@@ -20,19 +20,16 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.vichu.japantrip.R;
 import com.vichu.japantrip.adapters.PosterInfoAdapter;
-import com.vichu.japantrip.models.PosterInfo;
 import com.vichu.japantrip.models.Poster;
+import com.vichu.japantrip.models.PosterInfo;
 import com.vichu.japantrip.utils.AwsS3Helper;
-import com.vichu.japantrip.utils.NumToAplhaHelper;
-import com.vichu.japantrip.utils.PosterDownloadHelper;
+import com.vichu.japantrip.utils.DownloadHelper;
 import com.vichu.japantrip.utils.RecyclerViewHelper;
 
 import java.io.File;
 import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 public class PosterInfoActivity extends AppCompatActivity {
 
@@ -102,7 +99,7 @@ public class PosterInfoActivity extends AppCompatActivity {
 
     private void downloadPosterJsonAndRefreshUI() {
         File localFile = new File(getFilesDir(), "poster.json");
-        PosterDownloadHelper.downloadPosterJson(this, localFile, awsS3Helper, progressBar, progressText, recyclerView, new PosterDownloadHelper.DownloadListener() {
+        DownloadHelper.downloadJson(this, localFile, awsS3Helper, progressBar, progressText, recyclerView, new DownloadHelper.DownloadListener<Poster>() {
             @Override
             public void onDownloadSuccess(List<Poster> posterList) {
                 for (int i = 0; i < posterList.size(); i++) {
@@ -117,7 +114,7 @@ public class PosterInfoActivity extends AppCompatActivity {
             public void onDownloadFailed() {
                 Toast.makeText(PosterInfoActivity.this, "Failed to download poster list. Please check your internet connection.", Toast.LENGTH_LONG).show();
             }
-        });
+        }, file, new TypeToken<List<Poster>>() {}.getType(), Comparator.comparingInt(Poster::getPosterIndex));
     }
 
     @Override

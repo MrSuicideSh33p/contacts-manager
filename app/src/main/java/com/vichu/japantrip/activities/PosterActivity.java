@@ -19,15 +19,17 @@ import com.vichu.japantrip.R;
 import com.vichu.japantrip.adapters.PosterAdapter;
 import com.vichu.japantrip.models.Poster;
 import com.vichu.japantrip.utils.AwsS3Helper;
+import com.vichu.japantrip.utils.DownloadHelper;
 import com.vichu.japantrip.utils.RecyclerViewHelper;
-import com.vichu.japantrip.utils.PosterDownloadHelper;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class PosterActivity extends AppCompatActivity {
 
+    private static final String file = "poster/poster.json";
     private static final int POSTER_INFO_REQUEST_CODE = 102;
     private RecyclerView recyclerView;
     private PosterAdapter posterAdapter;
@@ -93,7 +95,7 @@ public class PosterActivity extends AppCompatActivity {
 
     private void downloadPosterJsonAndRefreshUI() {
         File localFile = new File(getFilesDir(), "poster.json");
-        PosterDownloadHelper.downloadPosterJson(this, localFile, awsS3Helper, progressBar, progressText, recyclerView, new PosterDownloadHelper.DownloadListener() {
+        DownloadHelper.downloadJson(this, localFile, awsS3Helper, progressBar, progressText, recyclerView, new DownloadHelper.DownloadListener<Poster>() {
             @Override
             public void onDownloadSuccess(List<Poster> posterList) {
                 RecyclerViewHelper.updateRecyclerView(posterAdapter, recyclerView, posterList);
@@ -103,6 +105,6 @@ public class PosterActivity extends AppCompatActivity {
             public void onDownloadFailed() {
                 Toast.makeText(PosterActivity.this, "Failed to download poster info. Please check your internet connection.", Toast.LENGTH_LONG).show();
             }
-        });
+        }, file, new TypeToken<List<Poster>>() {}.getType(), Comparator.comparingInt(Poster::getPosterIndex));
     }
 }
